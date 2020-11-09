@@ -1,8 +1,8 @@
 import { Component } from 'vue-property-decorator';
-import { vdMixin } from './vd.mixin';
+import { VdMixin } from './vd.mixin';
 
 @Component
-export class vdRespObjMixin<T> extends vdMixin {
+export class VdRespObjMixin<T> extends VdMixin {
 	// 返回值
 	public vdData: T = {} as any;
 

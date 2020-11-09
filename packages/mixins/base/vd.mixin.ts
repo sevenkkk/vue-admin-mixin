@@ -1,29 +1,29 @@
 import { Component } from 'vue-property-decorator';
 import { UseResult } from '../../model/response-body';
-import { vdMessage, VcMessageOptions } from '../../utils/message.utils';
-import { ConfigService, ConfirmInfo } from '../../service/config.service';
+import { vdMessage, VdMessageOptions } from '../../utils/message.utils';
+import { VdConfigService, VdConfirmInfo } from '../../service/vd-config.service';
 import { vdFetch } from '../../utils/http.utils';
-import { VcHttpMixin } from './vd-http.mixin';
+import { VdHttpMixin } from './vd-http.mixin';
 
 /**
  * 请求配置选项
  */
-export interface VcRequestOptions {
+export interface VdRequestOptions {
 	load?: boolean; // 是否是获取请求
 	loading?: boolean; // 是否加载loading框
-	message?: VcMessageOptions; // 处理message选项
-	confirm?: ConfirmInfo; // 确认提示消息
+	message?: VdMessageOptions; // 处理message选项
+	confirm?: VdConfirmInfo; // 确认提示消息
 }
 
 @Component
-export class VcMixin extends VcHttpMixin {
+export class VdMixin extends VdHttpMixin {
 
 	/**
 	 * 确认提示
 	 * @param info 消息
 	 */
-	protected vdConfirm<T>(info: ConfirmInfo): Promise<UseResult<T>> {
-		return ConfigService.handleConfirm(info);
+	protected vdConfirm<T>(info: VdConfirmInfo): Promise<UseResult<T>> {
+		return VdConfigService.config.handleConfirm(info);
 	}
 
 	/**
@@ -32,7 +32,7 @@ export class VcMixin extends VcHttpMixin {
 	 * @param data 参数
 	 * @param options 配置
 	 */
-	protected vdRequest<T>(url: string, data?: Array<Object> | Object, options?: VcRequestOptions): Promise<UseResult<T>> {
+	protected vdRequest<T>(url: string, data?: any, options?: VdRequestOptions): Promise<UseResult<T>> {
 		if (options) {
 			const {message, confirm, load, loading} = options;
 			let _message = message;

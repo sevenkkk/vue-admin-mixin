@@ -1,11 +1,10 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { UseResult } from '../../model/response-body';
-import { vcFetch } from '../../utils/http.utils';
-import { ConfigService } from '../../service/config.service';
+import { vdFetch } from '../../utils/http.utils';
+import { VdConfigService } from '../../service/vd-config.service';
 
 @Component
-export class VcHttpMixin extends Vue {
-
+export class VdHttpMixin extends Vue {
 	// http请求 loading状态 全局只有一个
 	protected vdLoading: boolean = false;
 
@@ -13,12 +12,12 @@ export class VcHttpMixin extends Vue {
 	private _isLoading = false;
 
 	@Watch('vdLoading')
-	private handleVcLoading(loading: boolean) {
+	private handleVdLoading(loading: boolean) {
 		if (this._isLoading) {
 			if (loading) {
-				ConfigService.handleStartLoading();
+				VdConfigService.config.handleStartLoading();
 			} else {
-				ConfigService.handleCloseLoading();
+				VdConfigService.config.handleCloseLoading();
 			}
 		}
 	}
@@ -29,7 +28,11 @@ export class VcHttpMixin extends Vue {
 	 * @param data 请求数据
 	 * @param option 选项配置
 	 */
-	protected async vdFetch<T>(url: string, data?: Array<Object> | Object, option?: { loading?: boolean }): Promise<UseResult<T>> {
+	protected async vdFetch<T>(
+		url: string,
+		data?: any,
+		option?: { loading?: boolean },
+	): Promise<UseResult<T>> {
 		if (option && option.loading != undefined) {
 			this._isLoading = option.loading;
 		}

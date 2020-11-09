@@ -1,11 +1,16 @@
-import { Component } from 'vue-property-decorator';
-import { vdRespObjMixin } from './base/vd-resp-obj-mixin';
+import { Component, Vue } from 'vue-property-decorator';
+import { VdRespObjMixin } from './base/vd-resp-obj-mixin';
 import { UseResult } from '../model/response-body';
-import { CommonService } from '../service/common.service';
-import { ConfigService } from '../service/config.service';
+import { VdCommonService } from '../service/vd-common.service';
+import { VdConfigService } from '../service/vd-config.service';
 
 @Component
-export class vdSubmitMixin<T, R> extends vdRespObjMixin<T> {
+export class VdSubmitMixin<T, R> extends VdRespObjMixin<T> {
+
+	// 是否正在加载
+	public get vdSLoading() {
+		return this.vdLoading;
+	}
 
 	/**
 	 * 提交表单
@@ -34,6 +39,8 @@ export class vdSubmitMixin<T, R> extends vdRespObjMixin<T> {
 
 	/**
 	 * 提交请求定义
+	 * @param path 请求地址
+	 * @param data 请求数据
 	 */
 	private vdSubmitRequest(path: string, data: T): Promise<UseResult<R>> {
 		return this.vdRequest<R>(path, data, {loading: true});
@@ -55,39 +62,24 @@ export class vdSubmitMixin<T, R> extends vdRespObjMixin<T> {
 
 	/**
 	 * 表单验证
+	 * @param $refs refs
 	 * @param formName form对象ref
 	 * @param success 成功回调
 	 * @param err 失败回调
 	 */
-	public vdValidate(formName: string | string[], success: () => void, err?: () => void) {
+	protected vdValidate($refs: { [key: string]: Vue | Element | Vue[] | Element[] }, formName: string | string[], success: () => void, err?: () => void) {
+		if (!formName) {
+			throw new Error('必须指定formName');
+		}
 		let formNames: string[] = [];
-		if (CommonService.isString(formName)) {
+		if (VdCommonService.isString(formName)) {
 			formNames = [formName as string];
 		} else {
 			formNames = formName as string[];
 		}
-		let _result = false;
-		try {
-			/* eslint-disable */
-			// @ts-ignore
-			if (this.$refs[formName] && this.$refs[formName]?.validate) {
-				formNames.forEach(formName => {
-					/* eslint-disable */
-					// @ts-ignore
-					this.$refs[formName].validate((result, item) => {
-						if (!result) {
-							for (let key in item) {
-								setTimeout(() => ConfigService.showErrorMessage(item[key][0].message), 1);
-							}
-							_result = true;
-						}
-					});
-				});
-			}
-		} catch (e) {
-			console.log(e);
-		}
-		if (!_result) {
+		const result = VdConfigService.config.handleFormValidate($refs, formNames);
+
+		if (!result) {
 			success();
 		} else {
 			if (err) {

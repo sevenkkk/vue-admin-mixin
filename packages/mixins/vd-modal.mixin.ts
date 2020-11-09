@@ -5,6 +5,9 @@ import { VdMixin } from './base/vd.mixin';
 const VD_MODAL_OPEN_MODAL = 'vd-model-open-modal';
 const VD_MODAL_CLOSE_MODAL = 'vd-model-close-modal';
 
+const VD_MODAL_DEFAULT_PIPE_KEY = 'vd-pipe-key';
+const VD_MODAL_DEFAULT_INDEX_KEY = -1;
+
 /**
  * 页面模式
  */
@@ -18,9 +21,9 @@ export enum PageMode {
  * 模态框返回值
  */
 export interface VdModalResult {
-	mode: PageMode;
-	data: any;
-	index: number;
+	mode: PageMode; // 模型
+	data: any; // 数据
+	index: number; // 索引
 }
 
 export namespace VdModal {
@@ -30,39 +33,39 @@ export namespace VdModal {
 
 		// @ts-ignore
 	@Component
-	export abstract class TargetMixin<T> extends VdMixin {
+	abstract class BaseTargetMixin extends VdMixin {
 
+		// 控制模态框显示隐藏
 		public vdVisible = false;
 
-		public vdModalData: any;
+		// 打开传入模态框数据
+		public vdInputData: any;
 
+		// 当前模式
 		public vdPageMode = PageMode.ADD;
 
-		private _index = -1;
+		// 对应数据索引，一般是类表数据索引
+		private _index = VD_MODAL_DEFAULT_INDEX_KEY;
 
-		// 返回值
+		// 打开模态框的回调
 		private _resolve: (result?: VdModalResult) => void;
 
-		protected vdSetDefaultKey() {
-			return '';
+		// 管道，用于匹配打开的模态框
+		protected vdSetPipe(): string {
+			return VD_MODAL_DEFAULT_PIPE_KEY;
 		}
 
-		private vdOpenModalKey() {
-			return `${VD_MODAL_OPEN_MODAL}-${this.vdSetDefaultKey()}`;
-		}
-
-		private vdCloseModalKey() {
-			return `${VD_MODAL_CLOSE_MODAL}-${this.vdSetDefaultKey}`;
-		}
-
+		// 是否是更新
 		public get vdIsUpdate() {
 			return this.vdPageMode == PageMode.UPDATE;
 		}
 
+		// 是否是添加
 		public get vdIsAdd() {
 			return this.vdPageMode == PageMode.ADD;
 		}
 
+		// 显示对应模式的文本
 		public get vdActionText(): string {
 			switch (this.vdPageMode) {
 				case PageMode.ADD:
@@ -74,15 +77,19 @@ export namespace VdModal {
 			}
 		}
 
-		protected beforeCreate() {
+		/**
+		 * 接受监听事件
+		 */
+		protected created() {
 			setTimeout(() => {
-				EventBus.$on(this.vdOpenModalKey(), ({data, mode, resolve, isShow, index}: { data: T; mode: PageMode; resolve: any, isShow: boolean; index?: number; }) => {
+				EventBus.$on(`${VD_MODAL_OPEN_MODAL}-${this.vdSetPipe()}`,
+					({data, mode, resolve, isShow, index}) => {
 						if (isShow) {
-							this.vdModalData = data;
+							this.vdInputData = data;
 							this.vdVisible = isShow;
 							this.vdPageMode = mode;
 							this._resolve = resolve;
-							this._index = index || -1;
+							this._index = index;
 						} else {
 							this.vdVisible = false;
 						}
@@ -91,21 +98,9 @@ export namespace VdModal {
 			}, 300);
 		}
 
-		public beforeDestroy() {
-			EventBus.$off(this.vdCloseModalKey());
+		protected beforeDestroy() {
+			EventBus.$off(`${VD_MODAL_OPEN_MODAL}-${this.vdSetPipe()}`);
 		}
-
-		/**
-		 * 打开model加载数据
-		 * @param data 传入数据
-		 * @param index 传入索引
-		 */
-		protected abstract vdLoadModalData(data?: T, index?: number): void;
-
-		/**
-		 * 清理modal数据
-		 */
-		public abstract vdClearModal(): void;
 
 		/**
 		 * 监听是否打开
@@ -114,11 +109,25 @@ export namespace VdModal {
 		@Watch('vdVisible')
 		private vdGetShow(visible: boolean) {
 			if (visible) {
-				this.vdLoadModalData(this.vdModalData, this._index);
+				this.vdShowModal(this.vdInputData, this._index);
 			} else {
-				this.vdClearModal();
+				this.vdHiddenModal();
 			}
 		}
+
+		/**
+		 * 打开模态框回调
+		 * @param data 传入数据
+		 * @param index 传入索引
+		 */
+		protected vdShowModal(data?: any, index?: number) {
+		};
+
+		/**
+		 * 关闭模态框回调
+		 */
+		protected vdHiddenModal() {
+		};
 
 		/**
 		 * 关闭模态框
@@ -129,7 +138,7 @@ export namespace VdModal {
 		}
 
 		/**
-		 * 关闭对话框并且传递数据
+		 * 关闭对话框 并且触发回调
 		 * @param data 数据
 		 */
 		public vdCloseModalCallback(data?: any) {
@@ -138,10 +147,17 @@ export namespace VdModal {
 				data,
 				index: this._index,
 			};
-			EventBus.$emit(this.vdCloseModalKey(), result);
+			EventBus.$emit(`${VD_MODAL_CLOSE_MODAL}-${this.vdSetPipe()}`, result);
 			this._resolve(result);
 			this.vdVisible = false;
 		}
+	}
+
+
+	@Component
+	// @ts-ignore
+	export class TargetMixin extends BaseTargetMixin {
+
 	}
 
 	/**
@@ -153,8 +169,8 @@ export namespace VdModal {
 		/**
 		 * 设置默认key（页面出现多个modal时进行区分）
 		 */
-		protected vdSetDefaultKey() {
-			return '';
+		public vdSetPipeKey(): number {
+			return 1;
 		}
 
 		// 当前mode
@@ -168,32 +184,25 @@ export namespace VdModal {
 			return this._vdPageMode == PageMode.ADD;
 		}
 
-		protected vdOpenModalKey() {
-			return `${VD_MODAL_OPEN_MODAL}-${this.vdSetDefaultKey()}`;
-		}
-
-		protected vdCloseModalKey() {
-			return `${VD_MODAL_CLOSE_MODAL}-${this.vdSetDefaultKey()}`;
-		}
-
-		protected beforeCreate() {
-			EventBus.$on(this.vdCloseModalKey(), ({data, mode, index}: { data: any; mode: PageMode; index: number }) => {
+		protected created() {
+			EventBus.$on(`${VD_MODAL_CLOSE_MODAL}-${this.vdSetPipeKey()}`, ({data, mode, index}) => {
 					this._vdPageMode = mode;
-					this.handleModalCallback(data, index);
+					this.vdModalCallback(data, index);
 				},
 			);
 		}
 
 		protected beforeDestroy() {
-			EventBus.$off(this.vdOpenModalKey());
+			EventBus.$off(`${VD_MODAL_OPEN_MODAL}-${this.vdSetPipeKey()}`);
 		}
+
 
 		/**
 		 * 获取返回值监听
 		 * @param data 数据
 		 * @param index 索引
 		 */
-		public handleModalCallback(data?: any, index?: number) {
+		public vdModalCallback(data?: any, index?: number) {
 		}
 	}
 
@@ -203,35 +212,81 @@ export namespace VdModal {
 	@Component
 	export class CrlMixin extends CallbackMixin {
 
-		public vdOpenModalByAdd(data?: any): Promise<VdModalResult | undefined> {
-			return new Promise((resolve) => {
-				this.vdOpenByPageMode(PageMode.ADD, resolve, data);
-			});
-		}
-
-		public vdOpenModalByUpdate(data?: any, index?: number): Promise<VdModalResult | undefined> {
-			return new Promise((resolve) => {
-				this.vdOpenByPageMode(PageMode.UPDATE, resolve, data, index);
-			});
-
-		}
-
-		public vdOpenModalByCheck(data?: any): Promise<VdModalResult | undefined> {
-			return new Promise((resolve) => {
-				this.vdOpenByPageMode(PageMode.CHECK, resolve, data);
-			});
+		/**
+		 * 打开模态框-传入索引（添加）
+		 * @param data 传入的数据
+		 * @param index 索引
+		 * @param pipe 管道，用于匹配打开的模态框
+		 */
+		public vdOpenModalByAddIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY) {
+			this.vdOpenModal(PageMode.ADD, data, index, pipe).then();
 		}
 
 		/**
-		 * 打开模态框
+		 * 打开模态框（添加）
+		 * @param data 传入的数据
+		 * @param pipe 管道，用于匹配打开的模态框
 		 */
-		private vdOpenByPageMode(pageMode: PageMode, resolve: any, data?: any, index?: number) {
-			EventBus.$emit(this.vdOpenModalKey(), {
-				data,
-				mode: pageMode,
-				resolve,
-				isShow: true,
-				index,
+		public vdOpenModalByAdd(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY) {
+			this.vdOpenModalByAddIndex(data, VD_MODAL_DEFAULT_INDEX_KEY, pipe);
+		}
+
+		/**
+		 * 打开模态框-传入索引（修改）
+		 * @param data 传入的数据
+		 * @param index 索引
+		 * @param pipe 管道，用于匹配打开的模态框
+		 */
+		public vdOpenModalByUpdateIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY) {
+			this.vdOpenModal(PageMode.UPDATE, data, index, pipe).then();
+		}
+
+		/**
+		 * 打开模态框（修改）
+		 * @param data 传入的数据
+		 * @param pipe 管道，用于匹配打开的模态框
+		 */
+		public vdOpenModalByUpdate(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY) {
+			this.vdOpenModalByUpdateIndex(data, VD_MODAL_DEFAULT_INDEX_KEY, pipe);
+
+		}
+
+		/**
+		 * 打开模态框-传入索引（查看）
+		 * @param data 传入的数据
+		 * @param index 索引
+		 * @param pipe 管道，用于匹配打开的模态框
+		 */
+		public vdOpenModalByCheckIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY) {
+			this.vdOpenModal(PageMode.CHECK, data, index, pipe).then();
+		}
+
+		/**
+		 * 打开模态框-传入索引（查看）
+		 * @param data 传入的数据
+		 * @param pipe 管道，用于匹配打开的模态框
+		 */
+		public vdOpenModalByCheck(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY) {
+			this.vdOpenModalByCheckIndex(data, VD_MODAL_DEFAULT_INDEX_KEY, pipe);
+		}
+
+
+		/**
+		 * 打开模态框
+		 * @param pipe 管道，用于匹配打开的模态框
+		 * @param mode 页面模型
+		 * @param data 数据
+		 * @param index 索引
+		 */
+		public vdOpenModal(mode: PageMode, data?: any, index?: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY): Promise<VdModalResult | undefined> {
+			return new Promise((resolve) => {
+				EventBus.$emit(`${VD_MODAL_OPEN_MODAL}-${pipe}`, {
+					data,
+					mode,
+					resolve,
+					isShow: true,
+					index,
+				});
 			});
 		}
 	}

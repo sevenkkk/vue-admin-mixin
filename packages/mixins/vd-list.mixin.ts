@@ -3,9 +3,9 @@ import { VdBaseListMixin } from './base/vd-base-list.mixin';
 import { UseResult } from '../model/response-body';
 
 @Component
-export class VdLoadListMixin<P, R> extends VdBaseListMixin<P, R> {
+export class VdListMixin<P, R> extends VdBaseListMixin<P, R> {
 	// 二级分类名称
-	private subAttr: string = '';
+	private subAttr = '';
 
 	// 选择二级分类索引
 	public vdSubIndex = 0;
@@ -20,9 +20,7 @@ export class VdLoadListMixin<P, R> extends VdBaseListMixin<P, R> {
 		return this.vdLoading;
 	}
 
-	/**
-	 * 获取二级分类对象选中值
-	 */
+	// 获取二级分类对象选中值
 	public get vdSubActive() {
 		if (!this.subAttr) {
 			return undefined;
@@ -57,7 +55,7 @@ export class VdLoadListMixin<P, R> extends VdBaseListMixin<P, R> {
 		if (this.vdIsDefaultSet) {
 			this.vdList = res.payload || [];
 		}
-		this.vdIsLoaded = true;
+		this.vdLoaded = true;
 		return res;
 	}
 }

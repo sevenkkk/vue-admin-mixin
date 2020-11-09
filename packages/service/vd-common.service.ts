@@ -1,7 +1,7 @@
 /**
  * 共通方法
  */
-export class CommonService {
+export class VdCommonService {
 	/**
 	 *  判断是否是字符串
 	 * @param target

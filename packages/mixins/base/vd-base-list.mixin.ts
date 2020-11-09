@@ -1,74 +1,66 @@
 import { Component } from 'vue-property-decorator';
-import { VcMixin } from './vc.mixin';
+import { VdMixin } from './vd.mixin';
 import { UseResult } from '../../model/response-body';
 
 // @ts-ignore
 @Component
-export abstract class VcBaseListMixin<P, R> extends VcMixin {
+export abstract class VdBaseListMixin<P, R> extends VdMixin {
 	// 是否直接赋值
-	protected vcIsDefaultSet = true;
+	protected vdIsDefaultSet = true;
 
 	// 返回值列表
-	public vcList: R[] = [];
+	public vdList: R[] = [];
 
 	// 请求参数
-	public vcParams: P = {} as any;
+	protected vdParams: P = {} as any;
 
 	// 当前索引
-	public vcIndex: number = 0;
+	public vdIndex = 0;
 
 	// 请求地址
-	protected vcListPath!: string;
+	protected vdListPath!: string;
 
 	// 是否已经加载
-	protected vcIsLoaded: boolean = false;
+	protected vdLoaded = false;
 
 	// 当前选中的对象
-	protected get vcActive(): R | undefined {
-		return this.vcList.length > this.vcIndex ? this.vcList[this.vcIndex] : undefined;
+	protected get vdActive(): R | undefined {
+		return this.vdList.length > this.vdIndex ? this.vdList[this.vdIndex] : undefined;
 	}
 
 	// 无数据
-	public get vcEmpty(): boolean {
-		return this.vcList.length == 0 && this.vcIsLoaded;
+	public get vdEmpty(): boolean {
+		return this.vdList.length == 0 && this.vdLoaded;
 	}
 
 	// 是否有数据
-	protected get vcHasData() {
-		return this.vcList && this.vcList.length > 0;
+	protected get vdHasData() {
+		return this.vdList && this.vdList.length > 0;
 	}
 
 	/**
 	 * 请求列表数据
 	 */
 	protected async request(path: string, data: any): Promise<UseResult<R[]>> {
-		return await this.vcRequest<R[]>(path, data, {load: true});
+		return await this.vdRequest<R[]>(path, data, {load: true});
 	}
 
 	/**
 	 * 设置默认参数
 	 */
-	protected defaultParams(): P {
+	protected vdDefaultParams(): P {
 		return {} as any;
-	}
-
-	/**
-	 * 初始化
-	 */
-	protected created() {
-		// 设置初始值
-		this.vcParams = this.defaultParams();
 	}
 
 	/**
 	 * 设置请求参数
 	 * @param path
 	 */
-	protected vcSetListPath(path?: string) {
+	protected vdSetListPath(path?: string) {
 		if (path) {
-			this.vcListPath = path;
+			this.vdListPath = path;
 		}
-		if (!this.vcListPath) {
+		if (!this.vdListPath) {
 			throw new Error('首次必须传入path');
 		}
 	}

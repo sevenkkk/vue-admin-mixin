@@ -1,11 +1,11 @@
 import { Component, Mixins } from 'vue-property-decorator';
-import { vdLoadObjMixin } from './vd-load-obj.mixin';
-import { vdSubmitMixin } from './vd-submit.mixin';
+import { VdObjMixin } from './vd-obj.mixin';
+import { VdSubmitMixin } from './vd-submit.mixin';
 
 @Component
 // @ts-ignore
-export class vdEditMixin<T> extends Mixins<vdLoadObjMixin<T>, vdSubmitMixin<T, string>>(
-	vdLoadObjMixin,
-	vdSubmitMixin,
+export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, string>>(
+	VdObjMixin,
+	VdSubmitMixin,
 ) {
 }

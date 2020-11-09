@@ -3,7 +3,7 @@ import { VdRespObjMixin } from './base/vd-resp-obj-mixin';
 import { UseResult } from '../model/response-body';
 
 @Component
-export class VdLoadObjMixin<T> extends VdRespObjMixin<T> {
+export class VdObjMixin<T> extends VdRespObjMixin<T> {
 	// 请求地址
 	private loadPath!: string;
 
@@ -26,9 +26,9 @@ export class VdLoadObjMixin<T> extends VdRespObjMixin<T> {
 	 * @param params 请求参数
 	 */
 	protected async vdLoadData(path?: string, params?: any) {
-		this.setLoadPath(path);
+		this.vdSetLoadPath(path);
 		try {
-			const res = await this.loadRequest(this.loadPath, params);
+			const res = await this.vdLoadRequest(this.loadPath, params);
 			this.vdData = res.payload as T;
 			this.isLoaded = true;
 			this.vdLoadSuccess(res.payload);
@@ -44,7 +44,7 @@ export class VdLoadObjMixin<T> extends VdRespObjMixin<T> {
 	 * @param path 请求参数
 	 * @param params 参数
 	 */
-	private loadRequest(path: string, params?: any): Promise<UseResult<T>> {
+	private vdLoadRequest(path: string, params?: any): Promise<UseResult<T>> {
 		return this.vdRequest<T>(path, params, {load: true});
 	}
 
@@ -67,7 +67,7 @@ export class VdLoadObjMixin<T> extends VdRespObjMixin<T> {
 	 * 设置保存请求路径
 	 * @param path
 	 */
-	private setLoadPath(path?: string) {
+	private vdSetLoadPath(path?: string) {
 		if (path) {
 			this.loadPath = path;
 		}

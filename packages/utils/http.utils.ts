@@ -1,78 +1,109 @@
-import { UseResult } from '../model/response-body';
-import { CommonService } from '../service/common.service';
-import { ConfigService } from '../service/config.service';
+import axios from 'axios';
+// @ts-ignore
+import qs from 'qs';
+import { VdConfigService } from '../service/vd-config.service';
+import { VdCommonService } from '../service/vd-common.service';
+import { UseResult, ResponseBody } from '../model/response-body';
 
 /**
- * 消息提示配置选项
+ * 发送api请求
+ * @param url  请求地址
+ * @param data 请求数据
  */
-export interface VcMessageOptions {
-	showMessage?: boolean; // 是否显示消息
-	successMessage?: string; // 成功消息内容
-	errorMessage?: string; // 错误消息内容
-	showError?: boolean; // 是否显示错误消息
-	showSuccess?: boolean; // 是否显示成功消息
-}
-
-let timeout: any = null;
+export const vdFetch = <T>(url: string, data?: Array<Object> | Object): Promise<UseResult<T>> => {
+	if (!url) {
+		throw new Error('请求url未定义。');
+	}
+	return doFetch(() => formPost(url, data));
+};
 
 /**
- * 请求处理消息信息
- * @param fetch 请求体
- * @param options 处理消息配置
+ * 发送请求，处理返回值
+ * @param doRequest 请求体
  */
-export const vcMessage = async <T>(fetch: () => Promise<UseResult<T>>,
-								   options?: VcMessageOptions): Promise<UseResult<T>> => {
-	const result = await fetch();
-	const {success, payload, errorCode, errorMessage: _errorMessage} = result;
-	const {
-		showMessage,
-		successMessage,
-		errorMessage,
-		showError,
-		showSuccess,
-	} = {
-		showMessage: true,
-		showError: true,
-		showSuccess: true,
-		...options,
-	};
-	if (success) {
-		if (showMessage && showSuccess) {
-			if (!CommonService.isString(payload) && !successMessage) {
-				throw new Error(
-					'Api返回值 「payload」字段的类型不是字符串，请设置options=> showSuccess: false，来取消自动提示成功消息',
-				);
+const doFetch = async <T>(doRequest: () => Promise<ResponseBody>): Promise<UseResult<T>> => {
+	try {
+		const {success, count, payload, errorMessage} = await doRequest();
+		return {success, payload, errorMessage, totalCount: count};
+	} catch (err) {
+		let errorMessage;
+		let errorCode;
+		const response = err.response;
+		if (response) {
+			if (response.status === 400) {
+				errorMessage = response.data.errorMessage || '';
 			}
-			const _successMessage = successMessage
-				? successMessage
-				: String(payload) || '操作成功！';
-			setTimeout(() => {
-				ConfigService.showSuccessMessage(_successMessage);
-			});
+			if (response.status === 403) {
+				errorMessage = VdConfigService.config?.message403 || response.data.errorMessage;
+			}
+			errorCode = response.data.errorCode;
+			errorMessage = response.data.errorMessage || VdConfigService.config?.systemErrorMessage;
 		}
-		return result;
-	} else {
-		const __errorMessage = errorMessage
-			? errorMessage
-			: _errorMessage || ConfigService.options?.systemErrorMessage;
-		if (showMessage && showError) {
-			if (errorCode == '403') {
-				if (timeout != null) {
-					clearTimeout(timeout);
+		/* eslint-disable */
+		// @ts-ignore
+		return {success: false, errorCode: errorCode || '500', errorMessage: errorMessage};
+	}
+};
+
+/**
+ * 请求以form表单形式进行提交
+ * @param url 请求地址
+ * @param data 请求参数，json类型进行转成表单提交格式
+ */
+const formPost = (url: string, data?: Array<any> | Object): Promise<ResponseBody> => {
+
+	if (data && !(VdCommonService.isObject(data) || VdCommonService.isArray(data))) {
+		throw new Error('参数值必须为数组和对象!');
+	}
+
+	let _data = undefined;
+
+	try {
+		if (data) {
+			if (data && VdCommonService.isObject(data)) {
+				const target: any = {};
+				const other: any = {};
+				for (const key in data) {
+					// @ts-ignore
+					if (VdCommonService.isArray(data[key])) {
+						// @ts-ignore
+						target[key] = data[key];
+					} else {
+						// @ts-ignore
+						other[key] = data[key];
+					}
 				}
 
-				timeout = setTimeout(function () {
-					if (ConfigService.options?.showMessage403) {
-						ConfigService.showErrorMessage(__errorMessage);
-					}
-					ConfigService.handle403(__errorMessage);
-				}, 500);
+				let _target;
+				let _other;
+
+				if (Object.keys(target).length !== 0) {
+					_target = qs.stringify(target, {allowDots: true, skipNulls: true});
+				}
+
+				if (Object.keys(other).length !== 0) {
+					_other = qs.stringify(other, {skipNulls: true});
+				}
+
+				if (_target) {
+					_data = _target;
+				}
+
+				if (_other) {
+					_data = _data ? `${_data}&${_other}` : _other;
+				}
 			} else {
-				setTimeout(() => {
-					ConfigService.showErrorMessage(__errorMessage);
-				});
+				_data = qs.stringify(data, {allowDots: true, skipNulls: true});
 			}
 		}
-		throw result;
+	} catch (e) {
+		console.log(e);
 	}
+
+	return axios({
+		baseURL: url,
+		method: 'post',
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		data: _data,
+	}).then(res => res.data);
 };
