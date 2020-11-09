@@ -66,8 +66,6 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
 }
 ```
 
-**Note that:**
-
 ### If the search criteria area is a component, in this case the component < PlatformListSearch >, we can use the【 VdTable.ParamMixin 】To synchronize data.
 
 ```html
@@ -272,6 +270,7 @@ VdModal.CrlMixin Included method:
  vdOpenModalByCheck(data?: any, pipe = '')                           | void                               | 打开模态框-传入索引（查看）
  vdOpenModal(mode: PageMode, data?: any, index?: number, pipe = '')  | Promise<VdModalResult | undefined> | 打开模态框
  
+ **Note that:**
  ### Multiple modals are distinguished by pipe， But it needs to be rewritten VdModal.TargetMixin Vdsetpipe method of
 
 ---
