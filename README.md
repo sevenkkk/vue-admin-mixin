@@ -67,11 +67,11 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
 
 **Note that:**
 
-## If the query area is a component, in this case < platform list search >, we can use the【 VdTable.ParamMixin 】To synchronize data.
+## If the search criteria area is a component, in this case < platform list search > component, we can use the【 VdTable.ParamMixin 】To synchronize data.
 
 ```html
 <el-form :inline="true" :model="vdParams" class="demo-form-inline">
-  <el-form-item label="其他筛选">
+  <el-form-item label="筛选">
     <el-input v-model="vdParams.searchText" placeholder="请输入筛选条件" />
   </el-form-item>
   <el-form-item>
