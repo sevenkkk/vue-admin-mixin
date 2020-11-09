@@ -67,7 +67,7 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
 
 **Note that:**
 
-## If the search criteria area is a component, in this case < PlatformListSearch > component, we can use the【 VdTable.ParamMixin 】To synchronize data.
+## If the search criteria area is a component, in this case the component < PlatformListSearch >, we can use the【 VdTable.ParamMixin 】To synchronize data.
 
 ```html
 <el-form :inline="true" :model="vdParams" class="demo-form-inline">
@@ -90,7 +90,7 @@ export default class PlatformListSearch extends VdTable.ParamMixin<PlatformSearc
 }
 ```
 
-## If the table is a component, in this case < PlatformListTable > component, we can use the【 VdTable.ListMixin 】To synchronize data.
+## If the table is a component, in this case the component < PlatformListTable >, we can use the【 VdTable.ListMixin 】To synchronize data.
 
 ```html
 <el-table :data="vdList" stripe>
