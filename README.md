@@ -179,8 +179,10 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
  vdRefresh                   | void                                              | 刷新数据（实际上调用的是 VdTable.MainMixin里的vdRefresh方法）
 
 ---
-### <a id="VdModal"></a> `VdModal.CrlMixin<P, R>` mixin
-### Inheritance VdModal.CallBackMixin Class can receive the value of the mode box close callback VdModal.CrlMixin It has been inherited.（class CrlMixin extends CallbackMixin）
+### <a id="VdModal"></a> `VdModal.CrlMixin` `VdModal.TargetMixin` `VdModal.CallbackMixin` mixin
+### Inheritance VdModal.CallBackMixin Class can receive the value of the mode box close callback VdModal.CrlMixin It has been inherited.
+
+### VdModal.CrlMixin && VdModal.CallbackMixin （class CrlMixin extends CallbackMixin）
 
 ```html
 <template>
@@ -216,6 +218,7 @@ export default class ModalTest extends VdModal.CrlMixin {
 	}
 }
 ```
+### VdModal.TargetMixin
 ### The Modal1 component needs to be implemented VdModal.TargetMixin
 
 ```html
