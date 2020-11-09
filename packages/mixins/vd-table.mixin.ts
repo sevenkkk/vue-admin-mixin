@@ -16,7 +16,7 @@ export namespace VdTable {
 	 */
 	@Component
 	export class MainMixin<P, R> extends VdBaseListMixin<P, R> {
-		// 总页码数
+		// 数据总条数
 		public vdTotal = 0;
 
 		// 当前页

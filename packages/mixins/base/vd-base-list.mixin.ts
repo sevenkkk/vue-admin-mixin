@@ -29,13 +29,8 @@ export abstract class VdBaseListMixin<P, R> extends VdMixin {
 	}
 
 	// 无数据
-	public get vdEmpty(): boolean {
+	public get vdLEmpty(): boolean {
 		return this.vdList.length == 0 && this.vdLoaded;
-	}
-
-	// 是否有数据
-	protected get vdHasData() {
-		return this.vdList && this.vdList.length > 0;
 	}
 
 	/**

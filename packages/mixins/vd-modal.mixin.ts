@@ -138,7 +138,7 @@ export namespace VdModal {
 		}
 
 		/**
-		 * 关闭对话框 并且触发回调
+		 * 关闭对话框 并且传值触发回调
 		 * @param data 数据
 		 */
 		public vdCloseModalCallback(data?: any) {
