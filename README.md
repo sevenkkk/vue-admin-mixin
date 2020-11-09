@@ -133,14 +133,14 @@ VdTable.MainMixin Included properties:
 
 VdTable.MainMixin Included method:
 
- method                      | return type          	           	         | describe
- --------------------------- | ------------------------------------------------- | --------------------------
- vdUsePage                   | boolean                                           | 是否使用分页 （Only get is supported）
- vdInitData                  | Promise<UseResult<R[]>>                           | 初始化数据（vdPage = 1）
- vdRefresh                   | Promise<UseResult<R[]>>                           | 刷新数据（页码不变）
- vdRefreshByPage             | void                 				 | 根据分页参数变化,重新加载数据
- vdDefaultParams             | P                 				 | 设置默认参数
- vdSetListPath               | void                 				 | 设置请求参数，vdInitData 时会自动设置到全局变量上
+ method                                                                  | return type          	         | describe
+ ----------------------------------------------------------------------- | ------------------------------------- | --------------------------
+ vdUsePage()                                                             | boolean                               | 重写可以指定是否使用分页
+ vdInitData(path?: string, data?: P)                                     | Promise<UseResult<R[]>>               | 初始化数据（vdPage = 1）
+ vdRefresh(data?: P)                                                     | Promise<UseResult<R[]>>               | 刷新数据（页码不变）
+ vdRefreshByPage(data: { page?: number; pageSize?: number })             | void                 		 | 根据分页参数变化,重新加载数据
+ vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写
+ vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdInitData 时会自动设置到全局变量上
 
 ---
 
@@ -281,9 +281,9 @@ VdModal.TargetMixin Included properties:
  vdVisible                   | boolean             | 控制模态框显示隐藏
  vdInputData                 | any                 | 打开传入模态框数据
  vdPageMode                  | PageMode            | 当前模式
- vdIsUpdate                  | boolean             | 是否是更新
- vdIsAdd                     | boolean             | 是否是添加
- vdActionTex                 | string              | 显示对应模式的文本
+ vdIsUpdate                  | boolean             | 是否是更新 （Only get is supported）
+ vdIsAdd                     | boolean             | 是否是添加 （Only get is supported）
+ vdActionTex                 | string              | 显示对应模式的文本 （Only get is supported）
 
 ---
 
@@ -310,9 +310,9 @@ VdModal.CallbackMixin Included properties:
 
 VdModal.CallbackMixin Included method:
 
- method                                          | return type          	           	     | describe
- ------------------------------------------------| ------------------------------------------------- | --------------------------
- vdModalCallback(data?: any, index?: number)     | void                                              | 模态框关闭时的回调函数
+ method                                                         | return type          	           	 	    | describe
+ ---------------------------------------------------------------| ------------------------------------------------- | --------------------------
+ vdModalCallback(data?: any, index?: number, pipe?: string)     | void                                              | 模态框关闭时的回调函数
  
 ---
 
