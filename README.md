@@ -264,15 +264,17 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 VdModal.CrlMixin Included method:
 
- method                                                                                     | return type                        | describe
- ------------------------------------------------------------------------------------------ | ---------------------------------- | -----------------------
- vdOpenModalByAddIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)          | void                    		 | 打开模态框-传入索引（添加）
- vdOpenModalByAdd(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY)                             | void                    		 | 打开模态框（添加）
- vdOpenModalByUpdateIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)       | void                    		 | 打开模态框-传入索引（修改）
- vdOpenModalByUpdate(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY)                          | void                    		 | 打开模态框（修改）
- vdOpenModalByCheckIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)        | void                    		 | 打开模态框-传入索引（查看）
- vdOpenModalByCheck(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY)                           | void                               | 打开模态框-传入索引（查看）
- vdOpenModal(mode: PageMode, data?: any, index?: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)  | Promise<VdModalResult | undefined> | 打开模态框
+ method                                                              | return type                        | describe
+ ------------------------------------------------------------------- | ---------------------------------- | -----------------------
+ vdOpenModalByAddIndex(data: any, index: number, pipe = '')          | void                    		  | 打开模态框-传入索引（添加）
+ vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		  | 打开模态框（添加）
+ vdOpenModalByUpdateIndex(data: any, index: number, pipe = '')       | void                    		  | 打开模态框-传入索引（修改）
+ vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		  | 打开模态框（修改）
+ vdOpenModalByCheckIndex(data: any, index: number, pipe = '')        | void                    		  | 打开模态框-传入索引（查看）
+ vdOpenModalByCheck(data?: any, pipe = '')                           | void                               | 打开模态框-传入索引（查看）
+ vdOpenModal(mode: PageMode, data?: any, index?: number, pipe = '')  | Promise<VdModalResult | undefined> | 打开模态框
+ 
+ ### Multiple modals are distinguished by pipe， But it needs to be rewritten VdModal.TargetMixin Vdsetpipe method of
 
 ---
 
