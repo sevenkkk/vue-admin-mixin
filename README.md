@@ -49,7 +49,7 @@ import { VdTable } from 'vue-admin-mixin';
 })
 export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Platform> {
 	
-  /**
+  	/**
 	 * 设置默认请求参数
 	 */
 	public defaultParams(): PlatformSearch {
