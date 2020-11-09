@@ -111,6 +111,7 @@ import { VdTable } from 'vue-admin-mixin';
 export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 }
 ```
+---
 
 VdTable.MainMixin Included properties:
 
