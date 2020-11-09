@@ -71,7 +71,8 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
 ## If the search criteria area is a component, in this case the component < PlatformListSearch >, we can use the【 VdTable.ParamMixin 】To synchronize data.
 
 ```html
-<el-form :inline="true" :model="vdParams" class="demo-form-inline">
+<template>
+ <el-form :inline="true" :model="vdParams" class="demo-form-inline">
   <el-form-item label="筛选">
     <el-input v-model="vdParams.searchText" placeholder="请输入筛选条件" />
   </el-form-item>
@@ -79,7 +80,8 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
     <el-button type="primary" @click="vdSearch">搜索</el-button>
     <el-button @click="vdClear">清空</el-button>
   </el-form-item>
-</el-form>
+ </el-form>
+</template>
 ```
 
 ```ts
@@ -176,5 +178,140 @@ VdTable.ParamMixin Included method:
  vdSearch                    | void                                              | 查询数据（实际上调用的是 VdTable.MainMixin里的vdInitData方法）
  vdRefresh                   | void                                              | 刷新数据（实际上调用的是 VdTable.MainMixin里的vdRefresh方法）
 
+---
+### <a id="VdModal"></a> `VdModal.CrlMixin<P, R>` mixin
+## Inheritance VdModal.CallBackMixin Class can receive the value of the mode box close callback VdModal.CrlMixin It has been inherited.
+
+```html
+<template>
+   <div @click="vdOpenModalByAdd()">打开添加modal</div>
+   <div @click="vdOpenModalByUpdate(data)">打开修改modal</div>
+   <div @click="handleOpenModal(data).then()">也可以这样调用</div>
+</template>
+```
+
+```ts
+import { Component } from 'vue-property-decorator';
+import { VdModal } from 'vue-admin-mixin';
+
+@Component({
+	components: { Modal1 },
+})
+export default class ModalTest extends VdModal.CrlMixin {
+	/**
+	 * 打开模态框方法
+	 */
+       public async handleOpenModal(data: any) {
+		const result = await this.vdOpenModal(PageMode.UPDATE, data);
+	}
+	/**
+	 * 模态框回调
+	 */
+	public vdHandleModalCallback(id: string) {
+		if (this.vdIsUpdate) {
+			this.loadDetailById(id).then();
+		} else {
+			this.loadList().then();
+		}
+	}
+}
+```
+## The Modal1 component needs to be implemented VdModal.TargetMixin
+
+```html
+<template>
+   <el-dialog :title="vdActionText + 'XXX'" :visible.sync="vdVisible">
+      <span slot="footer" class="dialog-footer">
+	 <el-button @click="vdCloseModal">取 消</el-button>
+	 <el-button type="primary" @click="handleSubmit">确 定</el-button>
+      </span>
+   </el-dialog>
+</template>
+```
+
+```ts
+import { Component } from 'vue-property-decorator';
+import { VdModal } from 'vue-admin-mixin';
+
+@Component
+export default class Modal1 extends VdModal.TargetMixin {
+	/**
+	 * 打开模态框回调
+	 */
+	public vdShowModal(data?: any): void {
+	}
+
+	/**
+	 * 关闭模态框回调
+	 */
+	public vdHiddenModal(): void {
+	}
+	
+	/**
+	 * 提交请求
+	 */
+	public handleSubmit() {
+		// 关闭模态框并且回传值过去
+		this.vdCloseModalCallback(this.data.id);
+	}
+}
+```
+
+---
+
+VdTable.CrlMixin Included method:
+
+ method                                                                                     | return type                        | describe
+ ------------------------------------------------------------------------------------------ | ---------------------------------- | -----------------------
+ vdOpenModalByAddIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)          | void                    		 | 打开模态框-传入索引（添加）
+ vdOpenModalByAdd(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY)                             | void                    		 | 打开模态框（添加）
+ vdOpenModalByUpdateIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)       | void                    		 | 打开模态框-传入索引（修改）
+ vdOpenModalByUpdate(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY)                          | void                    		 | 打开模态框（修改）
+ vdOpenModalByCheckIndex(data: any, index: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)        | void                    		 | 打开模态框-传入索引（查看）
+ vdOpenModalByCheck(data?: any, pipe = VD_MODAL_DEFAULT_PIPE_KEY)                           | void                               | 打开模态框-传入索引（查看）
+ vdOpenModal(mode: PageMode, data?: any, index?: number, pipe = VD_MODAL_DEFAULT_PIPE_KEY)  | Promise<VdModalResult | undefined> | 打开模态框
+
+---
+
+VdTable.TargetMixin Included properties:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------
+ vdVisible                   | boolean             | 控制模态框显示隐藏
+ vdInputData                 | any                 | 打开传入模态框数据
+ vdPageMode                  | PageMode            | 当前模式
+ vdIsUpdate                  | boolean             | 是否是更新
+ vdIsAdd                     | boolean             | 是否是添加
+ vdActionTex                 | string              | 显示对应模式的文本
+
+---
+
+VdTable.TargetMixin Included method:
+
+ method                      		 | return type          	           	     | describe
+ --------------------------------------- | ------------------------------------------------- | --------------------------
+ vdSetPipe()                   		 | string                                            | 管道，用于匹配打开的模态框(多个modal的时候使用)
+ vdShowModal(data?: any, index?: number) | void                                              | 打开模态框回调
+ vdHiddenModal()               		 | void                                              | 关闭模态框回调
+ vdCloseModal()                		 | void                                              | 关闭模态框
+ vdCloseModalCallback(data?: any)        | void                                              | 关闭模态框并且传值触发回调
+
+---
+
+VdTable.CallbackMixin Included properties:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------
+ vdIsUpdate                  | boolean             | 是否是更新
+ vdIsAdd                     | boolean             | 是否是添加
+
+---
+
+VdTable.CallbackMixin Included method:
+
+ method                                          | return type          	           	     | describe
+ ------------------------------------------------| ------------------------------------------------- | --------------------------
+ vdModalCallback(data?: any, index?: number)     | void                                              | 模态框关闭时的回调函数
+ 
 ---
 
