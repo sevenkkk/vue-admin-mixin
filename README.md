@@ -214,8 +214,7 @@ export default class ModalTest extends VdModal.CrlMixin {
 	}
 }
 ```
-### VdModal.TargetMixin，
-### The Modal1 component needs to be implemented VdModal.TargetMixin
+### VdModal.TargetMixin， The Modal1 component needs to be implemented VdModal.TargetMixin
 
 ```html
 <template>
