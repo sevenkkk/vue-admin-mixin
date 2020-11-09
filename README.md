@@ -31,6 +31,68 @@ There are several Mixins:
 
 ### <a id="VdTable"></a> `VdTable.MainMixin<P, R>` mixin
 
+VdTable.MainMixin Included properties:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------
+ vdTotal                     | number              | 数据总条数
+ vdPage                      | number              | 当前页码
+ vdPageSize                  | number              | 每页显示条数
+ vdSelected                  | R[]                 | 多选内容
+ vdList                      | R[]                 | 数据列表
+ vdParams                    | P                   | 请求参数
+ vdLLoading                  | boolean             | 是否正在加载
+ vdLEmpty                    | boolean             | 是否当前数据为空数据
+ vdIndex                     | number              | 当前索引
+ vdActive                    | R | undefined       | 当前选中的对象 （Only get is supported）
+ vdIsDefaultSet              | boolean             | 请求结果是否直接赋值给 vdList
+
+---
+
+VdTable.MainMixin Included method:
+
+ method                      | return type          	           	         | describe
+ --------------------------- | ------------------------------------------------- | --------------------------
+ vdUsePage                   | boolean                                           | 是否使用分页 （Only get is supported）
+ vdInitData                  | Promise<UseResult<R[]>>                           | 初始化数据（vdPage = 1）
+ vdRefresh                   | Promise<UseResult<R[]>>                           | 刷新数据
+ vdRefreshByPage             | void                 				 | 根据分页参数变化,重新加载数据
+ vdDefaultParams             | P                 				 | 设置默认参数
+ vdSetListPath               | void                 				 | 设置请求参数，vdInitData 时会自动设置到全局变量上
+
+---
+
+VdTable.ParamMixin Included properties:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------
+ vdTotal                     | number              | 数据总条数
+ vdPage                      | number              | 当前页码
+ vdPageSize                  | number              | 每页显示条数
+ vdSelected                  | R[]                 | 多选内容
+ vdList                      | R[]                 | 数据列表
+ vdParams                    | P                   | 请求参数
+ vdLLoading                  | boolean             | 是否正在加载
+ vdLEmpty                    | boolean             | 是否当前数据为空数据
+ vdIndex                     | number              | 当前索引
+ vdActive                    | R | undefined       | 当前选中的对象 （Only get is supported）
+ vdIsDefaultSet              | boolean             | 请求结果是否直接赋值给 vdList
+
+---
+
+VdTable.ParamMixin Included method:
+
+ method                      | return type          	           	         | describe
+ --------------------------- | ------------------------------------------------- | --------------------------
+ vdUsePage                   | boolean                                           | 是否使用分页 （Only get is supported）
+ vdInitData                  | Promise<UseResult<R[]>>                           | 初始化数据（vdPage = 1）
+ vdRefresh                   | Promise<UseResult<R[]>>                           | 刷新数据
+ vdRefreshByPage             | void                 				 | 根据分页参数变化,重新加载数据
+ vdDefaultParams             | P                 				 | 设置默认参数
+ vdSetListPath               | void                 				 | 设置请求参数，vdInitData 时会自动设置到全局变量上
+
+---
+
 ```html
 <template>
   <platform-list-search></platform-list-search>
