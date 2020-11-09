@@ -66,7 +66,24 @@ VdTable.ParamMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
- vdParams                    | number              | 跟VdTable.MainMixin里的vdParams 同步的，可以直接使用
+ vdParams                    | number              | 列表请求参数(同步 VdTable.MainMixin里的vdParams)
+
+---
+
+VdTable.ParamMixin Included method:
+
+ method                      | return type          	           	         | describe
+ --------------------------- | ------------------------------------------------- | --------------------------
+ vdSearch                    | void                                              | 查询数据（实际上调用的是 VdTable.MainMixin里的vdInitData方法）
+ vdRefresh                   | void                                              | 刷新数据（实际上调用的是 VdTable.MainMixin里的vdRefresh方法）
+
+---
+
+VdTable.ListMixin Included properties:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------
+ vdList                      | Array<T>            | 列表请求返回值(同步 VdTable.MainMixin里的vdList)
 
 ---
 
