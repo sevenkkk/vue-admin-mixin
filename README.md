@@ -180,9 +180,7 @@ VdTable.ParamMixin Included method:
 
 ---
 ### <a id="VdModal"></a> `VdModal.CrlMixin` `VdModal.TargetMixin` `VdModal.CallbackMixin` mixin
-### Inheritance VdModal.CallBackMixin Class can receive the value of the mode box close callback VdModal.CrlMixin It has been inherited.
-
-### VdModal.CrlMixin && VdModal.CallbackMixin （class CrlMixin extends CallbackMixin）
+### VdModal.CrlMixin && VdModal.CallbackMixin （class CrlMixin extends CallbackMixin） Used for modal box opening, hiding and callback
 
 ```html
 <template>
@@ -218,7 +216,7 @@ export default class ModalTest extends VdModal.CrlMixin {
 	}
 }
 ```
-### VdModal.TargetMixin
+### VdModal.TargetMixin，
 ### The Modal1 component needs to be implemented VdModal.TargetMixin
 
 ```html
