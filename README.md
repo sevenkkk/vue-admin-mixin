@@ -68,7 +68,7 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
 
 **Note that:**
 
-## If the search criteria area is a component, in this case the component < PlatformListSearch >, we can use the【 VdTable.ParamMixin 】To synchronize data.
+### If the search criteria area is a component, in this case the component < PlatformListSearch >, we can use the【 VdTable.ParamMixin 】To synchronize data.
 
 ```html
 <template>
@@ -93,7 +93,7 @@ export default class PlatformListSearch extends VdTable.ParamMixin<PlatformSearc
 }
 ```
 
-## If the table is a component, in this case the component < PlatformListTable >, we can use the【 VdTable.ListMixin 】To synchronize data.
+### If the table is a component, in this case the component < PlatformListTable >, we can use the【 VdTable.ListMixin 】To synchronize data.
 
 ```html
 <el-table :data="vdList" stripe>
@@ -115,7 +115,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 ```
 ---
 
-VdTable.MainMixin Included properties:
+### VdTable.MainMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -133,7 +133,7 @@ VdTable.MainMixin Included properties:
 
 ---
 
-VdTable.MainMixin Included method:
+### VdTable.MainMixin Included method:
 
  method                      | return type          	           	         | describe
  --------------------------- | ------------------------------------------------- | --------------------------
@@ -146,7 +146,7 @@ VdTable.MainMixin Included method:
 
 ---
 
-VdTable.ParamMixin Included properties:
+### VdTable.ParamMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -154,7 +154,7 @@ VdTable.ParamMixin Included properties:
 
 ---
 
-VdTable.ParamMixin Included method:
+### VdTable.ParamMixin Included method:
 
  method                      | return type          	           	         | describe
  --------------------------- | ------------------------------------------------- | --------------------------
@@ -163,7 +163,7 @@ VdTable.ParamMixin Included method:
 
 ---
 
-VdTable.ListMixin Included properties:
+### VdTable.ListMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -171,7 +171,7 @@ VdTable.ListMixin Included properties:
 
 ---
 
-VdTable.ParamMixin Included method:
+### VdTable.ParamMixin Included method:
 
  method                      | return type          	           	         | describe
  --------------------------- | ------------------------------------------------- | --------------------------
@@ -180,7 +180,7 @@ VdTable.ParamMixin Included method:
 
 ---
 ### <a id="VdModal"></a> `VdModal.CrlMixin<P, R>` mixin
-## Inheritance VdModal.CallBackMixin Class can receive the value of the mode box close callback VdModal.CrlMixin It has been inherited.
+### Inheritance VdModal.CallBackMixin Class can receive the value of the mode box close callback VdModal.CrlMixin It has been inherited.（class CrlMixin extends CallbackMixin）
 
 ```html
 <template>
@@ -216,7 +216,7 @@ export default class ModalTest extends VdModal.CrlMixin {
 	}
 }
 ```
-## The Modal1 component needs to be implemented VdModal.TargetMixin
+### The Modal1 component needs to be implemented VdModal.TargetMixin
 
 ```html
 <template>
@@ -259,7 +259,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-VdTable.CrlMixin Included method:
+### VdModal.CrlMixin Included method:
 
  method                                                                                     | return type                        | describe
  ------------------------------------------------------------------------------------------ | ---------------------------------- | -----------------------
@@ -273,7 +273,7 @@ VdTable.CrlMixin Included method:
 
 ---
 
-VdTable.TargetMixin Included properties:
+### VdModal.TargetMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -286,7 +286,7 @@ VdTable.TargetMixin Included properties:
 
 ---
 
-VdTable.TargetMixin Included method:
+### VdModal.TargetMixin Included method:
 
  method                      		 | return type          	           	     | describe
  --------------------------------------- | ------------------------------------------------- | --------------------------
@@ -298,7 +298,7 @@ VdTable.TargetMixin Included method:
 
 ---
 
-VdTable.CallbackMixin Included properties:
+### VdModal.CallbackMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -307,7 +307,7 @@ VdTable.CallbackMixin Included properties:
 
 ---
 
-VdTable.CallbackMixin Included method:
+### VdModal.CallbackMixin Included method:
 
  method                                          | return type          	           	     | describe
  ------------------------------------------------| ------------------------------------------------- | --------------------------
