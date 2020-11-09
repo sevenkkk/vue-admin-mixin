@@ -115,7 +115,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 ```
 ---
 
-### VdTable.MainMixin Included properties:
+VdTable.MainMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -133,7 +133,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 
 ---
 
-### VdTable.MainMixin Included method:
+VdTable.MainMixin Included method:
 
  method                      | return type          	           	         | describe
  --------------------------- | ------------------------------------------------- | --------------------------
@@ -146,7 +146,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 
 ---
 
-### VdTable.ParamMixin Included properties:
+VdTable.ParamMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -154,7 +154,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 
 ---
 
-### VdTable.ParamMixin Included method:
+VdTable.ParamMixin Included method:
 
  method                      | return type          	           	         | describe
  --------------------------- | ------------------------------------------------- | --------------------------
@@ -163,7 +163,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 
 ---
 
-### VdTable.ListMixin Included properties:
+VdTable.ListMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -171,7 +171,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 
 ---
 
-### VdTable.ParamMixin Included method:
+VdTable.ParamMixin Included method:
 
  method                      | return type          	           	         | describe
  --------------------------- | ------------------------------------------------- | --------------------------
@@ -262,7 +262,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-### VdModal.CrlMixin Included method:
+VdModal.CrlMixin Included method:
 
  method                                                                                     | return type                        | describe
  ------------------------------------------------------------------------------------------ | ---------------------------------- | -----------------------
@@ -276,7 +276,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-### VdModal.TargetMixin Included properties:
+VdModal.TargetMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -289,7 +289,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-### VdModal.TargetMixin Included method:
+VdModal.TargetMixin Included method:
 
  method                      		 | return type          	           	     | describe
  --------------------------------------- | ------------------------------------------------- | --------------------------
@@ -301,7 +301,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-### VdModal.CallbackMixin Included properties:
+VdModal.CallbackMixin Included properties:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------
@@ -310,7 +310,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-### VdModal.CallbackMixin Included method:
+VdModal.CallbackMixin Included method:
 
  method                                          | return type          	           	     | describe
  ------------------------------------------------| ------------------------------------------------- | --------------------------
