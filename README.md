@@ -333,13 +333,13 @@ VdModal.TargetMixin 属性:
 
 VdModal.TargetMixin 方法:
 
- method                      		 | return type          	           	     | describe
- --------------------------------------- | ------------------------------------------------- | --------------------------
- vdSetPipe()                   		 | string                                            | 管道，用于匹配打开的模态框(多个modal的时候使用, 或者给modal组件传入pipe属性)
- vdShowModal(data?: any)                 | void                                              | 打开模态框回调
- vdHiddenModal()               		 | void                                              | 关闭模态框回调
- vdCloseModal()                		 | void                                              | 关闭模态框
- vdCloseModalCallback(data?: any)        | void                                              | 关闭模态框并且传值触发回调
+ method                      		                 | return type          	           	   | describe
+ ------------------------------------------------------- | ------------------------------- | --------------------------
+ vdSetPipe()                               	    	 | string                          | 管道，用于匹配打开的模态框(多个modal的时候使用, 或者给modal组件传入pipe属性)
+ vdShowModal(data?: any)                 		 | void                            | 打开模态框回调
+ vdHiddenModal()               				 | void                            | 关闭模态框回调
+ vdCloseModal()                				 | void                            | 关闭模态框
+ vdCloseModalCallback(data?: any)     			 | void                            | 关闭模态框并且传值触发回调
 
 ---
 
@@ -354,9 +354,9 @@ VdModal.CallbackMixin 属性:
 
 VdModal.CallbackMixin 方法:
 
- method                                         | return type          	           	 	    | describe
- -----------------------------------------------| ------------------------------------------------- | --------------------------
- vdModalCallback(data?: any, pipe?: string)     | void                                              | 模态框关闭时的回调函数（或者可以使用@ModalCallback('pipeKey‘)来区分不同pipe）
+ method                                             | return type          	            | describe
+ ---------------------------------------------------| ------------------------------------- | --------------------------------------------------------------------
+ vdModalCallback(data?: any, pipe?: string)         | void                                  | 模态框关闭时的回调函数（或者可以使用@ModalCallback('pipeKey‘)来区分不同pipe）
  
 ---
 
