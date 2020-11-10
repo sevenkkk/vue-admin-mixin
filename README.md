@@ -557,6 +557,7 @@ class VdOptionService extends VdDefaultConfigService {
 					});
 				}
 			});
+		
 		} catch (e) {
 			console.log(e);
 		}
