@@ -137,11 +137,11 @@ VdTable.MainMixin 方法:
 
  method                                                                  | return type          	         | describe
  ----------------------------------------------------------------------- | ------------------------------------- | --------------------------
- vdUsePage()                                                             | boolean                               | 重写可以指定是否使用分页
+ vdUsePage()                                                             | boolean                               | 重写可以指定是否使用分页（默认是true）
+ vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写(默认是{})
  vdInitData(path?: string, data?: P)                                     | Promise<UseResult<R[]>>               | 初始化数据（vdPage = 1）
  vdRefresh(data?: P)                                                     | Promise<UseResult<R[]>>               | 刷新数据（页码不变）
  vdRefreshByPage(data: { page?: number; pageSize?: number })             | void                 		 | 根据分页参数变化,重新加载数据
- vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写
  vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdInitData 时会自动设置到全局变量上
 
 ---
@@ -231,7 +231,7 @@ export default class ModalTest extends VdModal.CrlMixin {
  ### 如果多个想控制多个modal的话， 使用pipe来解决， 打开时传入pipe， 接受时可以根据pipe来区分。 另一种方式使用@ModalCallback('pipeKey')注解来实现回调监听(推荐使用)。
 
 
-### VdModal.TargetMixin， 模态框组件继承TargetMixin，在vdShowModal回调函数上可以获取传入的数据，vdCloseModalCallback 方法可以回传数据到 CrlMixin或者CallbackMixin上。
+### VdModal.TargetMixin，模态框组件继承TargetMixin，在vdShowModal回调函数上可以接受到传入的数据，vdCloseModalCallback方法可以回传数据到CrlMixin或者CallbackMixin上。
 
 ```html
 <template>
