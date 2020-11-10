@@ -1,6 +1,6 @@
 {
   "name": "vue-admin-mixin",
-  "version": "0.1.63",
+  "version": "0.1.64",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -16,7 +16,7 @@
   "typings": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "test"
+    "url": "https://github.com/sevenkkk/vue-admin-mixin"
   },
   "dependencies": {
     "vue": "^2.6.11",
