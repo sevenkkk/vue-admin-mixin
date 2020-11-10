@@ -128,7 +128,7 @@ VdTable.MainMixin 属性:
  vdLHasData                  | boolean             | 是否有数据
  vdLEmpty                    | boolean             | 是否当前数据为空数据
  vdIndex                     | number              | 当前索引
- vdActive                    | R | undefined       | 当前选中的对象 （Only get is supported）
+ vdActive                    | R  undefined        | 当前选中的对象 （Only get is supported）
  vdIsDefaultSet              | boolean             | 请求结果是否直接赋值给 vdList
 
 ---
@@ -281,7 +281,7 @@ VdModal.CrlMixin 方法（继承了CallbackMixin所以拥有CallbackMixin的方�
  vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		    | 打开模态框（添加）
  vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		    | 打开模态框（修改）
  vdOpenModalByCheck(data?: any, pipe = '')                           | void                                 | 打开模态框（查看）
- vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult | undefined>   | 打开模态框
+ vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult undefined>   | 打开模态框
  
 ---
 
