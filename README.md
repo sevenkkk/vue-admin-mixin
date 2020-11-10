@@ -18,16 +18,48 @@ npm i -S vue-admin-mixin
 
 There are several Mixins:
 
+- [`VdMixin`]
 - [`VdTable.MainMixin`]
 - [`VdTable.ParamMixin`]
 - [`VdTable.ListMixin`]
 - [`VdListMixin`]
 - [`VdObjMixin`]
+- [`VdSubmitMixin`]
 - [`VdEditMixin`]
 - [`VdModal.CrlMixin`]
 - [`VdModal.TargetMixin`]
 - [`VdModal.CallbackMixin`]
 
+### <a id="VdMixin"></a> `VdMixin` mixin
+### 提供基本方法，所有的Mixin都继承了这个类
+
+VdMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdLoading                   | boolea              | 正在加载数据
+
+---
+
+VdMixin 方法:
+
+ method                                                             | return type          	         | describe
+ ------------------------------------------------------------------ | ---------------------------------- | --------------------------
+ vdFetch() 					       	            | T                                  | 发送api基础类（也可以直接用 vdFetch 充httpUtil获取方法）
+ vdConfirm(info: VdConfirmInfo)				            | void                               | 确认提示
+ vdMessage(fetch,options)				            | void                               | 请求处理消息信息
+ vdRequest(url: string, data?: any, options)                        | Promise<UseResult<T>>              | 发送请求api，实际上是vdConfirm、vdMessage的组合使用
+
+---
+```ts
+options:
+interface VdRequestOptions {
+	load?: boolean; // 是否是获取请求
+	loading?: boolean; // 是否加载loading框
+	message?: VdMessageOptions; // 处理message选项
+	confirm?: VdConfirmInfo; // 确认提示消息
+}
+```
 
 ### <a id="VdTable"></a> `VdTable.MainMixin<P, R>` mixin
 ### 用于列表分页查询的插件。
@@ -128,7 +160,7 @@ VdTable.MainMixin 属性:
  vdLHasData                  | boolean             | 是否有数据
  vdLEmpty                    | boolean             | 是否当前数据为空数据
  vdIndex                     | number              | 当前索引
- vdActive                    | R | undefined       | 当前选中的对象 （Only get is supported）
+ vdActive                    | R  undefined        | 当前选中的对象 （Only get is supported）
  vdIsDefaultSet              | boolean             | 请求结果是否直接赋值给 vdList
 
 ---
@@ -137,12 +169,12 @@ VdTable.MainMixin 方法:
 
  method                                                                  | return type          	         | describe
  ----------------------------------------------------------------------- | ------------------------------------- | --------------------------
- vdUsePage()                                                             | boolean                               | 重写可以指定是否使用分页
+ vdUsePage()                                                             | boolean                               | 重写可以指定是否使用分页（默认是true）
+ vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写(默认是{})
  vdInitData(path?: string, data?: P)                                     | Promise<UseResult<R[]>>               | 初始化数据（vdPage = 1）
  vdRefresh(data?: P)                                                     | Promise<UseResult<R[]>>               | 刷新数据（页码不变）
  vdRefreshByPage(data: { page?: number; pageSize?: number })             | void                 		 | 根据分页参数变化,重新加载数据
- vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写
- vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdInitData 时会自动设置到全局变量上
+ vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdInitData 时会自动设置到内部变量上
 
 ---
 
@@ -160,6 +192,7 @@ VdTable.ParamMixin 方法:
  --------------------------- | ------------------------------------------------- | --------------------------
  vdSearch                    | void                                              | 查询数据（实际上调用的是 VdTable.MainMixin里的vdInitData方法）
  vdRefresh                   | void                                              | 刷新数据（实际上调用的是 VdTable.MainMixin里的vdRefresh方法）
+ vdClear                     | void                                              | 清空参数（清空并且同步父组件到vdParams）
 
 ---
 
@@ -231,7 +264,7 @@ export default class ModalTest extends VdModal.CrlMixin {
  ### 如果多个想控制多个modal的话， 使用pipe来解决， 打开时传入pipe， 接受时可以根据pipe来区分。 另一种方式使用@ModalCallback('pipeKey')注解来实现回调监听(推荐使用)。
 
 
-### VdModal.TargetMixin， 模态框组件继承TargetMixin，在vdShowModal回调函数上可以获取传入的数据，vdCloseModalCallback 方法可以回传数据到 CrlMixin或者CallbackMixin上。
+### VdModal.TargetMixin，模态框组件继承TargetMixin，在vdShowModal回调函数上可以接受到传入的数据，vdCloseModalCallback方法可以回传数据到CrlMixin或者CallbackMixin上。
 
 ```html
 <template>
@@ -274,14 +307,14 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-VdModal.CrlMixin Included method:
+VdModal.CrlMixin 方法（继承了CallbackMixin所以拥有CallbackMixin的方法和属性）:
 
- method                                                              | return type                        | describe
- ------------------------------------------------------------------- | ---------------------------------- | -----------------------
- vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		  | 打开模态框（添加）
- vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		  | 打开模态框（修改）
- vdOpenModalByCheck(data?: any, pipe = '')                           | void                               | 打开模态框（查看）
- vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult | undefined> | 打开模态框
+ method                                                              | return type                          | describe
+ ------------------------------------------------------------------- | ------------------------------------ | -----------------------
+ vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		    | 打开模态框（添加）
+ vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		    | 打开模态框（修改）
+ vdOpenModalByCheck(data?: any, pipe = '')                           | void                                 | 打开模态框（查看）
+ vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult undefined>   | 打开模态框
  
 ---
 
@@ -327,3 +360,205 @@ VdModal.CallbackMixin 方法:
  
 ---
 
+### <a id="VdListMixin"></a> `VdListMixin<P, R>` mixin
+### 用于获取数组对象
+
+VdListMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdList                      | R[]                 | 数据列表
+ vdParams                    | P                   | 请求参数
+ vdLLoading                  | boolean             | 是否正在加载
+ vdLEmpty                    | boolean             | 是否当前数据为空数据
+ vdLHasData                  | boolean             | 是否有数据
+ vdIndex                     | number              | 当前索引
+ vdActive                    | R  undefined        | 当前选中的对象 （Only get is supported）
+ vdIsDefaultSet              | boolean             | 请求结果是否直接赋值给 vdList
+ vdSubIndex                  | number              | 选择二级分类索引
+ vdSubActive                 | number              | 当前选中二级的对象 （Only get is supported）
+
+---
+
+VdListMixin 方法:
+
+ method                                                                  | return type          	         | describe
+ ----------------------------------------------------------------------- | ------------------------------------- | --------------------------
+ vdSetSubAttr()                                                          | void                                  | 设置二级属性字段
+ vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写(默认是{})
+ vdLoadList(path?: string, data?: P)                                     | Promise<UseResult<R[]>>               | 加载数据
+ vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdLoadList 时会自动设置到内部变量上
+
+---
+
+### <a id="VdObjMixin"></a> `VdObjMixin<P, R>` mixin
+### 用于获取数组对象
+
+VdObjMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdData                      | R[]                 | 返回数据
+ vdOLoading                  | boolean             | 是否正在加载
+ vdOEmpty                    | boolean             | 是否当前数据为空数据
+ vdOHasData                  | boolean             | 是否有数据
+
+---
+
+VdObjMixin 方法:
+
+ method                                                             | return type          	         | describe
+ ------------------------------------------------------------------ | ---------------------------------- | --------------------------
+ vdDefaultData() 						    | T                                  | 设置默认值，可以重写父类方法
+ vdResetData()						            | void                               | 重置默认值
+ vdLoadData(path?: string, params?: any)                            | void                               | 加载数据
+ vdLoadSuccess(result?: T)                                          | void                 	         | 加载数据回调，可以重写父类方法
+ vdLoadError(err?: any)                                             | void                               | 加载数据失败，可以重写父类方法
+ vdSetListPath(path?: string)                                       | void              		 | 设置请求参数，vdLoadData 时会自动设置到内部变量上
+
+---
+
+### <a id="VdSubmitMixin"></a> `VdSubmitMixin<P, R>` mixin
+### 用于表单提交
+
+VdSubmitMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdData                      | R[]                 | 返回数据
+ vdSLoading                  | boolean             | 是否正在加载
+ vdOEmpty                    | boolean             | 是否当前数据为空数据
+ vdOHasData                  | boolean             | 是否有数据
+
+---
+
+VdSubmitMixin 方法:
+
+ method                                                             | return type          	         | describe
+ ------------------------------------------------------------------ | ---------------------------------- | --------------------------
+ vdDefaultData() 						    | T                                  | 设置默认值，可以重写父类方法
+ vdResetData()						            | void                               | 重置默认值
+ vdSubmit(path: string, data?: T, options)                          | void                               | 提交数据（options:{ merge: boolean } = {merge: true}）
+ vdSubmitSuccess(result?: T)                                        | void                 	         | 提交成功回调，可以重写父类方法
+ vdSubmitError(err?: any)                                           | void                               | 提价失败回调，可以重写父类方法
+ vdValidate($refs?, formName, success, err)                         | void              		 | 表单验证
+
+---
+
+### <a id="VdEditMixin"></a> `VdEditMixin<P, R>` mixin
+### 用于编辑页面，加载数据并且提交数据。是VdObjMixin、VdSubmitMixin 混入的结果
+```ts
+@Component
+// @ts-ignore
+export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, string>>(
+	VdObjMixin,
+	VdSubmitMixin,
+) {
+}
+```
+
+
+### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用VdDefaultConfigService， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
+```ts
+
+@Component
+export default class App extends Vue {
+	public created() {
+		VdConfigService.setUp(new VdOptionService());
+	}
+}
+
+class VdOptionService extends VdDefaultConfigService {
+	loadingCrl: any;
+
+	/**
+	 * 处理确认框
+	 * @param info 确认框
+	 */
+	handleConfirm(info: VdConfirmInfo): Promise<any> {
+		return this.$confirm(info.content, info.title, {
+			confirmButtonText: '确定',
+			cancelButtonText: '取消',
+			closeOnClickModal: false,
+		});
+	}
+
+	/**
+	 * 处理403
+	 */
+	handle403(): void {
+		this.$router.push({ name: 'Login' }).then();
+	}
+	
+	/**
+	 * 处理401
+	 */
+	handle401(): void {
+		this.$router.push({ name: 'Login' }).then();
+	}
+
+	/**
+	 * 提示失败信息
+	 * @param message
+	 */
+	showErrorMessage(message: string): void {
+		Message.error(message);
+	}
+
+	/**
+	 * 提示成功信息
+	 * @param message
+	 */
+	showSuccessMessage(message: string): void {
+		Message.success(message);
+	}
+
+	/**
+	 * 开始loading加载
+	 */
+	handleStartLoading(): any {
+		this.loadingCrl = this.$loading({
+			lock: true,
+		});
+	}
+
+	/**
+	 * 结束加载loading
+	 */
+	handleCloseLoading(): void {
+		if (this.loadingCrl) {
+			this.loadingCrl.close();
+		}
+	}
+
+	/**
+	 * 处理表单验证
+	 * @param $refs refs
+	 * @param formNames 表单ref名
+	 */
+	handleFormValidate($refs: { [key: string]: Vue | Element | Vue[] | Element[] }, formNames: string[]) {
+		let _result = false;
+		try {
+			formNames.forEach(formName => {
+				const target = $refs[formName];
+				if (target) {
+					/* eslint-disable */
+					// @ts-ignore
+					target?.validate((result, item) => {
+						if (!result) {
+							for (const key in item) {
+								setTimeout(() => this.showErrorMessage(item[key][0].message), 1);
+							}
+							_result = true;
+						}
+					});
+				}
+			});
+		} catch (e) {
+			console.log(e);
+		}
+		return _result;
+	}
+}
+
+```
