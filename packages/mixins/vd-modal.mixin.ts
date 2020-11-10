@@ -2,10 +2,10 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { createDecorator } from 'vue-class-component';
 import { EventBus } from '../utils/event-bus.utils';
 import { VdMixin } from './base/vd.mixin';
+import { VdCommonService } from '../service/vd-common.service';
 
 const VD_MODAL_OPEN_MODAL = 'vd-model-open-modal';
 const VD_MODAL_CLOSE_MODAL = 'vd-model-close-modal';
-const VD_MODAL_CLOSE_MODAL2 = 'vd-model-close-modal2';
 
 const VD_MODAL_DEFAULT_PIPE_KEY = 'vd-pipe-key';
 
@@ -27,6 +27,9 @@ export interface VdModalResult {
 	pipe: string; // 管道
 }
 
+const noop = () => {
+};
+
 /**
  * 用于区分多个modal回调
  * @param pipe 管道
@@ -34,22 +37,25 @@ export interface VdModalResult {
  */
 export function ModalCallback(pipe?: string) {
 	return createDecorator((options, key) => {
-		// Keep the original method for later.
-		const originalMethod = options.methods[key];
-
-		if (!pipe) {
-			pipe = VD_MODAL_DEFAULT_PIPE_KEY;
+		if ('vdModalCallback' === key) {
+			throw new Error('vdModalCallback is a callback function, please change another name！');
 		}
 
-		EventBus.$on(`${VD_MODAL_CLOSE_MODAL2}${pipe}`, (data) => {
-				try {
-					// @ts-ignore
-					originalMethod(data);
-				} catch (e) {
+		/* eslint-disable */
+		// @ts-ignore
+		const original = options.methods['vdModalCallback'] || noop;
 
-				}
-			},
-		);
+		const originalMethod = options.methods[key] || noop;
+
+		/* eslint-disable */
+		// @ts-ignore
+		options.methods['vdModalCallback'] = function wrapperMethod(...args) {
+			original.apply(this, args);
+			if (args && VdCommonService.isArray(args) && args.length >= 2 && args[1] === pipe) {
+				originalMethod.apply(this, args);
+			}
+		};
+
 	});
 }
 
@@ -205,7 +211,6 @@ export namespace VdModal {
 			EventBus.$on(VD_MODAL_CLOSE_MODAL, ({data, mode, pipe}) => {
 					this._vdPageMode = mode;
 					this._pipe = pipe;
-					EventBus.$emit(`${VD_MODAL_CLOSE_MODAL2}${pipe}`, data);
 					this.vdModalCallback(data, pipe);
 				},
 			);
@@ -213,10 +218,6 @@ export namespace VdModal {
 
 		protected beforeDestroy() {
 			EventBus.$off(VD_MODAL_CLOSE_MODAL);
-			try {
-				EventBus.$off(`${VD_MODAL_CLOSE_MODAL2}${this._pipe}`);
-			} catch (e) {
-			}
 		}
 
 		/**
