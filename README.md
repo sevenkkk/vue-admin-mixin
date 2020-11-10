@@ -458,8 +458,16 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ```
 
 
-### 可配置选项 默认使用VdDefaultConfigService， 但是需要提供自定义实现类。一下是使用element-ui组件配置。
+### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用VdDefaultConfigService， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
 ```ts
+
+@Component
+export default class App extends Vue {
+	public created() {
+		VdConfigService.setUp(new VdOptionService());
+	}
+}
+
 class VdOptionService extends VdDefaultConfigService {
 	loadingCrl: any;
 
@@ -479,6 +487,13 @@ class VdOptionService extends VdDefaultConfigService {
 	 * 处理403
 	 */
 	handle403(): void {
+		this.$router.push({ name: 'Login' }).then();
+	}
+	
+	/**
+	 * 处理401
+	 */
+	handle401(): void {
 		this.$router.push({ name: 'Login' }).then();
 	}
 
