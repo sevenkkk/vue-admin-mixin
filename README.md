@@ -48,14 +48,16 @@ VdMixin 方法:
  vdFetch() 					       	            | T                                  | 发送api基础类（也可以直接用 vdFetch 充httpUtil获取方法）
  vdConfirm(info: VdConfirmInfo)				            | void                               | 确认提示
  vdMessage(fetch,options)				            | void                               | 请求处理消息信息
- vdRequest(url: string, data?: any, options)                        | Promise<UseResult<T>>              | 发送请求api，实际上是vdConfirm、vdMessage的组合使用options:{
+ vdRequest(url: string, data?: any, options)                        | Promise<UseResult<T>>              | 发送请求api，实际上是vdConfirm、vdMessage的组合使用
+
+---
+options:
+interface VdRequestOptions {
 	load?: boolean; // 是否是获取请求
 	loading?: boolean; // 是否加载loading框
 	message?: VdMessageOptions; // 处理message选项
 	confirm?: VdConfirmInfo; // 确认提示消息
 }
-
----
 
 ### <a id="VdTable"></a> `VdTable.MainMixin<P, R>` mixin
 ### 用于列表分页查询的插件。
