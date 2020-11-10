@@ -160,6 +160,7 @@ VdTable.ParamMixin 方法:
  --------------------------- | ------------------------------------------------- | --------------------------
  vdSearch                    | void                                              | 查询数据（实际上调用的是 VdTable.MainMixin里的vdInitData方法）
  vdRefresh                   | void                                              | 刷新数据（实际上调用的是 VdTable.MainMixin里的vdRefresh方法）
+ vdClear                     | void                                              | 清空参数（清空并且同步父组件到vdParams）
 
 ---
 
