@@ -143,7 +143,7 @@ VdTable.MainMixin 方法:
  vdInitData(path?: string, data?: P)                                     | Promise<UseResult<R[]>>               | 初始化数据（vdPage = 1）
  vdRefresh(data?: P)                                                     | Promise<UseResult<R[]>>               | 刷新数据（页码不变）
  vdRefreshByPage(data: { page?: number; pageSize?: number })             | void                 		 | 根据分页参数变化,重新加载数据
- vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdInitData 时会自动设置到全局变量上
+ vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdInitData 时会自动设置到内部变量上
 
 ---
 
@@ -329,3 +329,33 @@ VdModal.CallbackMixin 方法:
  
 ---
 
+### <a id="VdListMixin"></a> `VdListMixin<P, R>` mixin
+### 用于获取数组对象
+
+VdListMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdList                      | R[]                 | 数据列表
+ vdParams                    | P                   | 请求参数
+ vdLLoading                  | boolean             | 是否正在加载
+ vdLEmpty                    | boolean             | 是否当前数据为空数据
+ vdLHasData                  | boolean             | 是否有数据
+ vdIndex                     | number              | 当前索引
+ vdActive                    | R  undefined        | 当前选中的对象 （Only get is supported）
+ vdIsDefaultSet              | boolean             | 请求结果是否直接赋值给 vdList
+ vdSubIndex                  | number              | 选择二级分类索引
+ vdSubActive                 | number              | 当前选中二级的对象 （Only get is supported）
+
+---
+
+VdListMixin 方法:
+
+ method                                                                  | return type          	         | describe
+ ----------------------------------------------------------------------- | ------------------------------------- | --------------------------
+ vdSetSubAttr()                                                          | void                                  | 设置二级属性字段
+ vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写(默认是{})
+ vdLoadList(path?: string, data?: P)                                     | Promise<UseResult<R[]>>               | 加载数据
+ vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdLoadList 时会自动设置到内部变量上
+
+---
