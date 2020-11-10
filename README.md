@@ -97,7 +97,7 @@ export default class PlatformListSearch extends VdTable.ParamMixin<PlatformSearc
 <el-table :data="vdList" stripe>
   <el-table-column prop="name" label="XXX" width="168">
   </el-table-column>
-  <div slot="vdTEmpty">
+  <div slot="vdLEmpty">
     <moy-empty />
   </div>
 </el-table>
