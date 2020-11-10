@@ -276,12 +276,12 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 VdModal.CrlMixin Included method:
 
- method                                                              | return type                        | describe
- ------------------------------------------------------------------- | ---------------------------------- | -----------------------
- vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		  | 打开模态框（添加）
- vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		  | 打开模态框（修改）
- vdOpenModalByCheck(data?: any, pipe = '')                           | void                               | 打开模态框（查看）
- vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult | undefined> | 打开模态框
+ method                                                              | return type                          | describe
+ ------------------------------------------------------------------- | ------------------------------------ | -----------------------
+ vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		    | 打开模态框（添加）
+ vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		    | 打开模态框（修改）
+ vdOpenModalByCheck(data?: any, pipe = '')                           | void                                 | 打开模态框（查看）
+ vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult | undefined>   | 打开模态框
  
 ---
 
