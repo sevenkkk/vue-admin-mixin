@@ -11,7 +11,7 @@ export class VdListMixin<P, R> extends VdBaseListMixin<P, R> {
 	public vdSubIndex = 0;
 
 	// 设置二级分类key
-	public vdSetSubAttr(attr: string) {
+	public vdSetSubAttr(attr: string): void {
 		this.subAttr = attr;
 	}
 

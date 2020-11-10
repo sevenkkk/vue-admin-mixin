@@ -15,6 +15,11 @@ export class VdObjMixin<T> extends VdRespObjMixin<T> {
 		return (this.vdData ? Object.keys(this.vdData).length == 0 : true) && this.isLoaded;
 	}
 
+	// 是否有数据
+	public get vdOHasData() {
+		return !(this.vdData ? Object.keys(this.vdData).length == 0 : true);
+	}
+
 	// loading 状态
 	public get vdOLoading() {
 		return this.vdLoading;
