@@ -214,6 +214,17 @@ export default class ModalTest extends VdModal.CrlMixin {
 			this.loadList().then();
 		}
 	}
+	/**
+	 * 如果多个modal回调监听使用pipe区分
+	 */
+	@ModalCallback('pipeKey')
+	public vdHandleModalCallbackByPipeKey(data: any) {
+		if (this.vdIsUpdate) {
+			this.loadDetailById(id).then();
+		} else {
+			this.loadList().then();
+		}
+	}
 }
 ```
  **Note that:**
