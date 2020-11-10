@@ -1,6 +1,6 @@
 {
   "name": "vue-admin-mixin",
-  "version": "0.1.64",
+  "version": "0.1.67",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,8 +10,7 @@
   },
   "main": "lib/vue-admin-mixin.umd.min.js",
   "files": [
-    "lib",
-    "types"
+    "lib"
   ],
   "typings": "lib/index.d.ts",
   "repository": {

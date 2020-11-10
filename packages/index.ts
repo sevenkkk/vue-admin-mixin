@@ -6,6 +6,10 @@ export * from './mixins/vd-edit.mixin';
 export * from './mixins/vd-table.mixin';
 export * from './mixins/vd-modal.mixin';
 
+export * from './decorators/confirm';
+export * from './decorators/modal-callback';
+export * from './decorators/validate';
+
 export * from './service/vd-common.service';
 export * from './service/vd-config.service';
 

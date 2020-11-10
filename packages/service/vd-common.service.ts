@@ -25,4 +25,12 @@ export class VdCommonService {
 	static isArray(target: any) {
 		return target && typeof target == 'object' && target.constructor == Array;
 	};
+
+	/**
+	 *  判断是否是数组
+	 * @param target 对象
+	 */
+	static isFunction(target: any) {
+		return target && typeof target == 'function';
+	};
 }

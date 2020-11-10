@@ -68,12 +68,11 @@ abstract class BaseSubmitMixin<T, R> extends VdRespObjMixin<T> {
 
 	/**
 	 * 表单验证
-	 * @param $refs refs
-	 * @param formName form对象ref
+	 * @param formName ref名称
 	 * @param success 成功回调
 	 * @param err 失败回调
 	 */
-	protected vdValidate($refs: { [key: string]: Vue | Element | Vue[] | Element[] }, formName: string | string[], success: () => void, err?: () => void) {
+	protected vdValidate(formName: string | string[], success: () => void, err?: () => void) {
 		if (!formName) {
 			throw new Error('必须指定formName');
 		}
@@ -83,7 +82,7 @@ abstract class BaseSubmitMixin<T, R> extends VdRespObjMixin<T> {
 		} else {
 			formNames = formName as string[];
 		}
-		const result = VdConfigService.config.handleFormValidate($refs, formNames);
+		const result = VdConfigService.config.handleFormValidate(this.$refs, formNames);
 
 		if (!result) {
 			success();

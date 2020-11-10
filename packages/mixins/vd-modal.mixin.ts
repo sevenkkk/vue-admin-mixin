@@ -1,12 +1,10 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { createDecorator } from 'vue-class-component';
 import { EventBus } from '../utils/event-bus.utils';
 import { VdMixin } from './base/vd.mixin';
-import { VdCommonService } from '../service/vd-common.service';
+
 
 const VD_MODAL_OPEN_MODAL = 'vd-model-open-modal';
 const VD_MODAL_CLOSE_MODAL = 'vd-model-close-modal';
-
 const VD_MODAL_DEFAULT_PIPE_KEY = 'vd-pipe-key';
 
 /**
@@ -25,38 +23,6 @@ export interface VdModalResult {
 	mode: PageMode; // 模型
 	data: any; // 数据
 	pipe: string; // 管道
-}
-
-const noop = () => {
-};
-
-/**
- * 用于区分多个modal回调
- * @param pipe 管道
- * @constructor
- */
-export function ModalCallback(pipe?: string) {
-	return createDecorator((options, key) => {
-		if ('vdModalCallback' === key) {
-			throw new Error('vdModalCallback is a callback function, please change another name！');
-		}
-
-		/* eslint-disable */
-		// @ts-ignore
-		const original = options.methods['vdModalCallback'] || noop;
-
-		const originalMethod = options.methods[key] || noop;
-
-		/* eslint-disable */
-		// @ts-ignore
-		options.methods['vdModalCallback'] = function wrapperMethod(...args) {
-			original.apply(this, args);
-			if (args && VdCommonService.isArray(args) && args.length >= 2 && args[1] === pipe) {
-				originalMethod.apply(this, args);
-			}
-		};
-
-	});
 }
 
 export namespace VdModal {
