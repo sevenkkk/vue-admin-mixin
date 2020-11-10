@@ -274,7 +274,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-VdModal.CrlMixin Included method:
+VdModal.CrlMixin 方法（继承了CallbackMixin所以拥有CallbackMixin的方法和属性）:
 
  method                                                              | return type                          | describe
  ------------------------------------------------------------------- | ------------------------------------ | -----------------------
