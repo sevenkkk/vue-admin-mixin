@@ -4,8 +4,9 @@ import { UseResult } from '../model/response-body';
 import { VdCommonService } from '../service/vd-common.service';
 import { VdConfigService } from '../service/vd-config.service';
 
+// @ts-ignore
 @Component
-export class VdSubmitMixin<T, R> extends VdRespObjMixin<T> {
+abstract class BaseSubmitMixin<T, R> extends VdRespObjMixin<T> {
 
 	// 是否正在加载
 	public get vdSLoading() {
@@ -61,6 +62,11 @@ export class VdSubmitMixin<T, R> extends VdRespObjMixin<T> {
 	}
 
 	/**
+	 * 提交
+	 */
+	public abstract vdHandleSubmit(): void;
+
+	/**
 	 * 表单验证
 	 * @param $refs refs
 	 * @param formName form对象ref
@@ -87,4 +93,12 @@ export class VdSubmitMixin<T, R> extends VdRespObjMixin<T> {
 			}
 		}
 	}
+}
+
+/**
+ * 用于表单提交
+ */
+@Component
+// @ts-ignore
+export class VdSubmitMixin<T, R> extends BaseSubmitMixin<T, R> {
 }
