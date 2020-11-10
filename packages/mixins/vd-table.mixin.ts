@@ -32,11 +32,6 @@ export namespace VdTable {
 			return true;
 		}
 
-		// 是否正在加载
-		public get vdTLoading() {
-			return this.vdLoading;
-		}
-
 		@Watch('vdParams', {deep: true})
 		private vdUpdateParams(params: P) {
 			EventBus.$emit(VD_PAGE_SYNC_PARAMS_KEY_1, params);

@@ -15,11 +15,6 @@ export class VdListMixin<P, R> extends VdBaseListMixin<P, R> {
 		this.subAttr = attr;
 	}
 
-	// loading 状态
-	public get vdLLoading() {
-		return this.vdLoading;
-	}
-
 	// 获取二级分类对象选中值
 	public get vdSubActive() {
 		if (!this.subAttr) {

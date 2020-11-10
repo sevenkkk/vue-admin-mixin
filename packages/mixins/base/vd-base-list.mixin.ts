@@ -23,6 +23,11 @@ export abstract class VdBaseListMixin<P, R> extends VdMixin {
 	// 是否已经加载
 	protected vdLoaded = false;
 
+	// loading 状态
+	public get vdLLoading() {
+		return this.vdLoading;
+	}
+
 	// 当前选中的对象
 	protected get vdActive(): R | undefined {
 		return this.vdList.length > this.vdIndex ? this.vdList[this.vdIndex] : undefined;
