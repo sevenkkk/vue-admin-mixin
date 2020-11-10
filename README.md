@@ -68,7 +68,7 @@ interface VdRequestOptions {
 ```html
 <template>
   <platform-list-search></platform-list-search>
-  <cc-table-container :total="vdTotal" v-loading="vdTLoading" @loadByPage="vdRefreshByPage">
+  <cc-table-container :total="vdTotal" v-loading="vdLLoading" @loadByPage="vdRefreshByPage">
     <platform-list-table></platform-list-table>
   </cc-table-container>
 </template>
@@ -86,7 +86,7 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
   	/**
 	 * 设置默认请求参数
 	 */
-	public defaultParams(): PlatformSearch {
+	public vdDefaultParams(): PlatformSearch {
 		return { searchText: '' };
 	}
 
@@ -161,7 +161,6 @@ VdTable.MainMixin 属性:
  vdLLoading                  | boolean             | 是否正在加载
  vdLEmpty                    | boolean             | 是否当前数据为空数据
  vdLHasData                  | boolean             | 是否有数据
- vdLEmpty                    | boolean             | 是否当前数据为空数据
  vdIndex                     | number              | 当前索引
  vdActive                    | R  undefined        | 当前选中的对象 （Only get is supported）
  vdIsDefaultSet              | boolean             | 请求结果是否直接赋值给 vdList
@@ -207,7 +206,7 @@ VdTable.ListMixin 属性:
 
 ---
 
-VdTable.ParamMixin 方法:
+VdTable.ListMixin 方法:
 
  method                      | return type          	           	         | describe
  --------------------------- | ------------------------------------------------- | --------------------------
@@ -220,9 +219,9 @@ VdTable.ParamMixin 方法:
 
 ```html
 <template>
-   <div @click="vdOpenModalByAdd()">打开添加modal</div>
-   <div @click="vdOpenModalByUpdate(data)">打开修改modal</div>
-   <div @click="handleOpenModal(data).then()">也可以这样调用</div>
+   <div @click="vdOpenModalByAdd()">打开添加modal(打开方式1)</div>
+   <div @click="vdOpenModalByUpdate(data)">打开修改modal(打开方式1)</div>
+   <div @click="handleOpenModal(data).then()">也可以这样调用(打开方式2)</div>
 </template>
 ```
 
@@ -235,15 +234,15 @@ import { VdModal } from 'vue-admin-mixin';
 })
 export default class ModalTest extends VdModal.CrlMixin {
 	/**
-	 * 打开模态框方法
+	 * 打开模态框方法(打开方式2)
 	 */
        public async handleOpenModal(data: any) {
 		const result = await this.vdOpenModal(PageMode.UPDATE, data);
 	}
 	/**
-	 * 模态框回调
+	 * 模态框回调(回调方式1)
 	 */
-	public vdHandleModalCallback(data: any, pipe?: string) {
+	public vdModalCallback(data: any, pipe?: string) {
 		if (this.vdIsUpdate) {
 			this.loadDetailById(id).then();
 		} else {
@@ -251,10 +250,11 @@ export default class ModalTest extends VdModal.CrlMixin {
 		}
 	}
 	/**
-	 * 如果多个modal回调监听使用pipe区分
+	 * 如果多个modal回调监听使用pipe区分(回调方式2)
+	 * 注意：不能跟 vdModalCallback 重名
 	 */
 	@ModalCallback('pipeKey')
-	public vdHandleModalCallbackByPipeKey(data: any) {
+	public handleModalCallbackByPipeKey(data: any) {
 		if (this.vdIsUpdate) {
 			this.loadDetailById(id).then();
 		} else {
@@ -317,7 +317,7 @@ VdModal.CrlMixin 方法（继承了`CallbackMixin`所以拥有`CallbackMixin`的
  vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		    | 打开模态框（添加）
  vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		    | 打开模态框（修改）
  vdOpenModalByCheck(data?: any, pipe = '')                           | void                                 | 打开模态框（查看）
- vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult undefined>   | 打开模态框
+ vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult undefined>     | 打开模态框
  
 ---
 
@@ -557,6 +557,7 @@ class VdOptionService extends VdDefaultConfigService {
 					});
 				}
 			});
+		
 		} catch (e) {
 			console.log(e);
 		}
