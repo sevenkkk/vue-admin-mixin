@@ -62,7 +62,7 @@ interface VdRequestOptions {
 }
 ```
 
-### <a id="VdTable"></a> `VdTable.MainMixin<P, R>` mixin
+### <a id="VdTable.MainMixin"></a> `VdTable.MainMixin<P, R>` mixin
 ### 用于列表分页查询的插件。
 
 ```html
