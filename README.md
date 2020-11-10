@@ -18,6 +18,7 @@ npm i -S vue-admin-mixin
 
 There are several Mixins:
 
+- [`VdMixin`]
 - [`VdTable.MainMixin`]
 - [`VdTable.ParamMixin`]
 - [`VdTable.ListMixin`]
@@ -29,6 +30,32 @@ There are several Mixins:
 - [`VdModal.TargetMixin`]
 - [`VdModal.CallbackMixin`]
 
+### <a id="VdMixin"></a> `VdMixin` mixin
+### 提供基本方法，所有的Mixin都继承了这个类
+
+VdMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdLoading                   | boolea              | 返回数据
+
+---
+
+VdMixin 方法:
+
+ method                                                             | return type          	         | describe
+ ------------------------------------------------------------------ | ---------------------------------- | --------------------------
+ vdFetch() 					       	            | T                                  | 发送api基础类（也可以直接用 vdFetch 充httpUtil获取方法）
+ vdConfirm(info: VdConfirmInfo)				            | void                               | 确认提示
+ vdMessage(fetch,options)				            | void                               | 请求处理消息信息
+ vdRequest(url: string, data?: any, options)                        | Promise<UseResult<T>>              | 发送请求api，实际上是vdConfirm、vdMessage的组合使用options:{
+	load?: boolean; // 是否是获取请求
+	loading?: boolean; // 是否加载loading框
+	message?: VdMessageOptions; // 处理message选项
+	confirm?: VdConfirmInfo; // 确认提示消息
+}
+
+---
 
 ### <a id="VdTable"></a> `VdTable.MainMixin<P, R>` mixin
 ### 用于列表分页查询的插件。
@@ -359,3 +386,69 @@ VdListMixin 方法:
  vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdLoadList 时会自动设置到内部变量上
 
 ---
+
+### <a id="VdObjMixin"></a> `VdObjMixin<P, R>` mixin
+### 用于获取数组对象
+
+VdObjMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdData                      | R[]                 | 返回数据
+ vdOLoading                  | boolean             | 是否正在加载
+ vdOEmpty                    | boolean             | 是否当前数据为空数据
+ vdOHasData                  | boolean             | 是否有数据
+
+---
+
+VdObjMixin 方法:
+
+ method                                                             | return type          	         | describe
+ ------------------------------------------------------------------ | ---------------------------------- | --------------------------
+ vdDefaultData() 						    | T                                  | 设置默认值，可以重写父类方法
+ vdResetData()						            | void                               | 重置默认值
+ vdLoadData(path?: string, params?: any)                            | void                               | 加载数据
+ vdLoadSuccess(result?: T)                                          | void                 	         | 加载数据回调，可以重写父类方法
+ vdLoadError(err?: any)                                             | void                               | 加载数据失败，可以重写父类方法
+ vdSetListPath(path?: string)                                       | void              		 | 设置请求参数，vdLoadData 时会自动设置到内部变量上
+
+---
+
+### <a id="VdSubmitMixin"></a> `VdSubmitMixin<P, R>` mixin
+### 用于表单提交
+
+VdSubmitMixin 属性:
+
+ propertie                   | return type         | describe
+ --------------------------- | ------------------- | --------------------------------------
+ vdData                      | R[]                 | 返回数据
+ vdSLoading                  | boolean             | 是否正在加载
+ vdOEmpty                    | boolean             | 是否当前数据为空数据
+ vdOHasData                  | boolean             | 是否有数据
+
+---
+
+VdSubmitMixin 方法:
+
+ method                                                             | return type          	         | describe
+ ------------------------------------------------------------------ | ---------------------------------- | --------------------------
+ vdDefaultData() 						    | T                                  | 设置默认值，可以重写父类方法
+ vdResetData()						            | void                               | 重置默认值
+ vdSubmit(path: string, data?: T, options)                          | void                               | 提交数据（options:{ merge: boolean } = {merge: true}）
+ vdSubmitSuccess(result?: T)                                        | void                 	         | 提交成功回调，可以重写父类方法
+ vdSubmitError(err?: any)                                           | void                               | 提价失败回调，可以重写父类方法
+ vdValidate($refs?, formName, success, err)                         | void              		 | 表单验证
+
+---
+
+### <a id="VdEditMixin"></a> `VdEditMixin<P, R>` mixin
+### 用于编辑页面，加载数据并且提交数据。是VdObjMixin、VdSubmitMixin 混入的结果
+```ts
+@Component
+// @ts-ignore
+export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, string>>(
+	VdObjMixin,
+	VdSubmitMixin,
+) {
+}
+```
