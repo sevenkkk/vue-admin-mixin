@@ -37,7 +37,7 @@ VdMixin 属性:
 
  propertie                   | return type         | describe
  --------------------------- | ------------------- | --------------------------------------
- vdLoading                   | boolea              | 返回数据
+ vdLoading                   | boolea              | 正在加载数据
 
 ---
 
