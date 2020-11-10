@@ -19,16 +19,17 @@ npm i -S vue-admin-mixin
 There are several Mixins:
 
 - [`VdMixin`](#VdMixin)
-- [`VdTable.MainMixin`](#VdTable)
-- [`VdTable.ParamMixin`]
-- [`VdTable.ListMixin`]
-- [`VdListMixin`]
-- [`VdObjMixin`]
-- [`VdSubmitMixin`]
-- [`VdEditMixin`]
-- [`VdModal.CrlMixin`]
-- [`VdModal.TargetMixin`]
-- [`VdModal.CallbackMixin`]
+- [`VdTable.MainMixin`](#VdTable-MainMixin)
+- [`VdTable.ParamMixin`](#VdTable-ParamMixin)
+- [`VdTable.ListMixin`](#VdTable-ListMixin)
+- [`VdModal.CrlMixin`](#VdModal-CrlMixin)
+- [`VdModal.TargetMixin`](#VdModal-TargetMixin)
+- [`VdModal.CallbackMixin`](#VdModal-TargetMixin)
+- [`VdListMixin`](#VdListMixin)
+- [`VdObjMixin`](#VdObjMixin)
+- [`VdSubmitMixin`](#VdSubmitMixin)
+- [`VdEditMixin`](#VdEditMixin)
+- [`VdDefaultConfigService`](#VdDefaultConfigService)
 
 ### <a id="VdMixin"></a> `VdMixin` mixin
 ### 提供基本方法，所有的Mixin都继承了这个类
@@ -98,6 +99,7 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
 }
 ```
 
+### <a id="VdTable-ParamMixin"></a> `VdTable.ParamMixin<P, R>` mixin
 ### 建议搜索区域是一个组件，如果是这样的话， 可以使用 `VdTable.ParamMixin` 来同步列表的请求参数和刷新事件。
 
 ```html
@@ -123,6 +125,7 @@ export default class PlatformListSearch extends VdTable.ParamMixin<PlatformSearc
 }
 ```
 
+### <a id="VdTable-ListMixin"></a> `VdTable.ListMixin<P, R>` mixin
 ### 建议表格的结果页面是一个组件， 可以使用 `VdTable.ListMixin` 来同步列表的请求参数和刷新事件。
 
 ```html
@@ -212,7 +215,7 @@ VdTable.ParamMixin 方法:
  vdRefresh                   | void                                              | 刷新数据（实际上调用的是 VdTable.MainMixin里的vdRefresh方法）
 
 ---
-### <a id="VdModal"></a> `VdModal.CrlMixin` `VdModal.TargetMixin` `VdModal.CallbackMixin` mixin
+### <a id="VdModal-CrlMixin"></a> `VdModal.CrlMixin` `VdModal.TargetMixin` `VdModal.CallbackMixin` mixin
 ### 用于控制模态框的打开、隐藏、数据传值和回值。 `VdModal.CrlMixin` 继承了 `VdModal.CallbackMixin` 所以可以使用 `CallbackMixin` 的属性和方法。
 
 ```html
@@ -263,7 +266,7 @@ export default class ModalTest extends VdModal.CrlMixin {
  **Note that:**
  ### 如果多个想控制多个`modal`的话， 使用`pipe`来解决， 打开时传入`pipe`， 接受时可以根据pipe来区分。 另一种方式使用`@ModalCallback('pipeKey')`注解来实现回调监听(推荐使用)。
 
-
+### <a id="VdModal-TargetMixin"></a> `TargetMixin` mixin
 ### `VdModal.TargetMixin`，模态框组件继承`TargetMixin`，在`vdShowModal`回调函数上可以接受到传入的数据，`vdCloseModalCallback` 方法可以回传数据到`CrlMixin`或者`CallbackMixin`上。
 
 ```html
@@ -457,7 +460,7 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 }
 ```
 
-
+### <a id="默认使用VdDefaultConfigService"></a> `默认使用VdDefaultConfigService` service
 ### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用VdDefaultConfigService， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
 ```ts
 
