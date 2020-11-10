@@ -18,8 +18,8 @@ npm i -S vue-admin-mixin
 
 There are several Mixins:
 
-- [`VdMixin`]
-- [`VdTable.MainMixin`]
+- [`VdMixin`](#VdMixin)
+- [`VdTable.MainMixin`](#VdTable)
 - [`VdTable.ParamMixin`]
 - [`VdTable.ListMixin`]
 - [`VdListMixin`]
@@ -98,7 +98,7 @@ export default class PlatformList extends VdTable.MainMixin<PlatformSearch, Plat
 }
 ```
 
-### 建议搜索区域是一个组件，如果是这样的话， 可以使用【VdTable.ParamMixin】来同步列表的请求参数和刷新事件。
+### 建议搜索区域是一个组件，如果是这样的话， 可以使用 `VdTable.ParamMixin` 来同步列表的请求参数和刷新事件。
 
 ```html
 <template>
@@ -123,7 +123,7 @@ export default class PlatformListSearch extends VdTable.ParamMixin<PlatformSearc
 }
 ```
 
-### 建议table结果页面是一个组件， 可以使用【VdTable.ListMixin】来同步列表的请求参数和刷新事件。
+### 建议表格的结果页面是一个组件， 可以使用 `VdTable.ListMixin` 来同步列表的请求参数和刷新事件。
 
 ```html
 <el-table :data="vdList" stripe>
@@ -213,7 +213,7 @@ VdTable.ParamMixin 方法:
 
 ---
 ### <a id="VdModal"></a> `VdModal.CrlMixin` `VdModal.TargetMixin` `VdModal.CallbackMixin` mixin
-### 用于控制模态框的打开、隐藏、数据传值和回值。 VdModal.CrlMixin 继承了 VdModal.CallbackMixin 所以可以使用 CallbackMixin 的属性和方法。
+### 用于控制模态框的打开、隐藏、数据传值和回值。 `VdModal.CrlMixin` 继承了 `VdModal.CallbackMixin` 所以可以使用 `CallbackMixin` 的属性和方法。
 
 ```html
 <template>
@@ -261,10 +261,10 @@ export default class ModalTest extends VdModal.CrlMixin {
 }
 ```
  **Note that:**
- ### 如果多个想控制多个modal的话， 使用pipe来解决， 打开时传入pipe， 接受时可以根据pipe来区分。 另一种方式使用@ModalCallback('pipeKey')注解来实现回调监听(推荐使用)。
+ ### 如果多个想控制多个`modal`的话， 使用`pipe`来解决， 打开时传入`pipe`， 接受时可以根据pipe来区分。 另一种方式使用`@ModalCallback('pipeKey')`注解来实现回调监听(推荐使用)。
 
 
-### VdModal.TargetMixin，模态框组件继承TargetMixin，在vdShowModal回调函数上可以接受到传入的数据，vdCloseModalCallback方法可以回传数据到CrlMixin或者CallbackMixin上。
+### `VdModal.TargetMixin`，模态框组件继承`TargetMixin`，在`vdShowModal`回调函数上可以接受到传入的数据，`vdCloseModalCallback` 方法可以回传数据到`CrlMixin`或者`CallbackMixin`上。
 
 ```html
 <template>
@@ -307,7 +307,7 @@ export default class Modal1 extends VdModal.TargetMixin {
 
 ---
 
-VdModal.CrlMixin 方法（继承了CallbackMixin所以拥有CallbackMixin的方法和属性）:
+VdModal.CrlMixin 方法（继承了`CallbackMixin`所以拥有`CallbackMixin`的方法和属性）:
 
  method                                                              | return type                          | describe
  ------------------------------------------------------------------- | ------------------------------------ | -----------------------
