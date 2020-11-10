@@ -51,6 +51,7 @@ VdMixin 方法:
  vdRequest(url: string, data?: any, options)                        | Promise<UseResult<T>>              | 发送请求api，实际上是vdConfirm、vdMessage的组合使用
 
 ---
+```ts
 options:
 interface VdRequestOptions {
 	load?: boolean; // 是否是获取请求
@@ -58,6 +59,7 @@ interface VdRequestOptions {
 	message?: VdMessageOptions; // 处理message选项
 	confirm?: VdConfirmInfo; // 确认提示消息
 }
+```
 
 ### <a id="VdTable"></a> `VdTable.MainMixin<P, R>` mixin
 ### 用于列表分页查询的插件。
