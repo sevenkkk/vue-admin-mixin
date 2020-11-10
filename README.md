@@ -116,7 +116,7 @@ export default class PlatformListTable extends VdTable.ListMixin<Platform> {
 VdTable.MainMixin Included properties:
 
  propertie                   | return type         | describe
- --------------------------- | ------------------- | --------------------------
+ --------------------------- | ------------------- | --------------------------------------
  vdTotal                     | number              | 数据总条数
  vdPage                      | number              | 当前页码
  vdPageSize                  | number              | 每页显示条数
@@ -124,6 +124,8 @@ VdTable.MainMixin Included properties:
  vdList                      | R[]                 | 数据列表
  vdParams                    | P                   | 请求参数
  vdLLoading                  | boolean             | 是否正在加载
+ vdLEmpty                    | boolean             | 是否当前数据为空数据
+ vdLHasData                  | boolean             | 是否有数据
  vdLEmpty                    | boolean             | 是否当前数据为空数据
  vdIndex                     | number              | 当前索引
  vdActive                    | R | undefined       | 当前选中的对象 （Only get is supported）
@@ -261,13 +263,10 @@ VdModal.CrlMixin Included method:
 
  method                                                              | return type                        | describe
  ------------------------------------------------------------------- | ---------------------------------- | -----------------------
- vdOpenModalByAddIndex(data: any, index: number, pipe = '')          | void                    		  | 打开模态框-传入索引（添加）
  vdOpenModalByAdd(data?: any, pipe = '')                             | void                    		  | 打开模态框（添加）
- vdOpenModalByUpdateIndex(data: any, index: number, pipe = '')       | void                    		  | 打开模态框-传入索引（修改）
  vdOpenModalByUpdate(data?: any, pipe = '')                          | void                    		  | 打开模态框（修改）
- vdOpenModalByCheckIndex(data: any, index: number, pipe = '')        | void                    		  | 打开模态框-传入索引（查看）
- vdOpenModalByCheck(data?: any, pipe = '')                           | void                               | 打开模态框-传入索引（查看）
- vdOpenModal(mode: PageMode, data?: any, index?: number, pipe = '')  | Promise<VdModalResult | undefined> | 打开模态框
+ vdOpenModalByCheck(data?: any, pipe = '')                           | void                               | 打开模态框（查看）
+ vdOpenModal(mode: PageMode, data?: any, pipe = '')                  | Promise<VdModalResult | undefined> | 打开模态框
  
  **Note that:**
  ### Multiple modals are distinguished by pipe， But it needs to be rewritten VdModal.TargetMixin Vdsetpipe method of
@@ -283,7 +282,7 @@ VdModal.TargetMixin Included properties:
  vdPageMode                  | PageMode            | 当前模式
  vdIsUpdate                  | boolean             | 是否是更新 （Only get is supported）
  vdIsAdd                     | boolean             | 是否是添加 （Only get is supported）
- vdActionTex                 | string              | 显示对应模式的文本 （Only get is supported）
+ vdActionText                | string              | 显示对应模式的文本 （Only get is supported）
 
 ---
 
@@ -291,8 +290,8 @@ VdModal.TargetMixin Included method:
 
  method                      		 | return type          	           	     | describe
  --------------------------------------- | ------------------------------------------------- | --------------------------
- vdSetPipe()                   		 | string                                            | 管道，用于匹配打开的模态框(多个modal的时候使用)
- vdShowModal(data?: any, index?: number) | void                                              | 打开模态框回调
+ vdSetPipe()                   		 | string                                            | 管道，用于匹配打开的模态框(多个modal的时候使用, 或者给modal组件传入pipe属性)
+ vdShowModal(data?: any)                 | void                                              | 打开模态框回调
  vdHiddenModal()               		 | void                                              | 关闭模态框回调
  vdCloseModal()                		 | void                                              | 关闭模态框
  vdCloseModalCallback(data?: any)        | void                                              | 关闭模态框并且传值触发回调
@@ -310,9 +309,9 @@ VdModal.CallbackMixin Included properties:
 
 VdModal.CallbackMixin Included method:
 
- method                                                         | return type          	           	 	    | describe
- ---------------------------------------------------------------| ------------------------------------------------- | --------------------------
- vdModalCallback(data?: any, index?: number, pipe?: string)     | void                                              | 模态框关闭时的回调函数
+ method                                         | return type          	           	 	    | describe
+ -----------------------------------------------| ------------------------------------------------- | --------------------------
+ vdModalCallback(data?: any, pipe?: string)     | void                                              | 模态框关闭时的回调函数（或者可以使用@ModalCallback('key1‘)来区分不同pipe）
  
 ---
 
