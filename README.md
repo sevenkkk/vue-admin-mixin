@@ -23,6 +23,7 @@ There are several Mixins:
 - [`VdTable.ListMixin`]
 - [`VdListMixin`]
 - [`VdObjMixin`]
+- [`VdSubmitMixin`]
 - [`VdEditMixin`]
 - [`VdModal.CrlMixin`]
 - [`VdModal.TargetMixin`]
