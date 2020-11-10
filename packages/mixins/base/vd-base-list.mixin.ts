@@ -33,6 +33,11 @@ export abstract class VdBaseListMixin<P, R> extends VdMixin {
 		return this.vdList.length == 0 && this.vdLoaded;
 	}
 
+	// 是否有数据
+	protected get vdLHasData() {
+		return this.vdList && this.vdList.length > 0;
+	}
+
 	/**
 	 * 请求列表数据
 	 */
@@ -51,7 +56,7 @@ export abstract class VdBaseListMixin<P, R> extends VdMixin {
 	 * 设置请求参数
 	 * @param path
 	 */
-	protected vdSetListPath(path?: string) {
+	public vdSetListPath(path?: string) {
 		if (path) {
 			this.vdListPath = path;
 		}

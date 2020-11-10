@@ -46,7 +46,7 @@ export class VdListMixin<P, R> extends VdBaseListMixin<P, R> {
 	 * @param data 请求数据 请求参数
 	 */
 	public async vdLoadList(path?: string, data?: P): Promise<UseResult<R[]>> {
-		super.vdSetListPath(path);
+		this.vdSetListPath(path);
 		let _data = this.vdParams;
 		if (data) {
 			_data = {...this.vdParams, ...data};
