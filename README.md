@@ -441,7 +441,7 @@ VdSubmitMixin 方法:
  ------------------------------------------------------------------ | ---------------------------------- | --------------------------
  vdDefaultData() 						    | T                                  | 设置默认值，可以重写父类方法
  vdResetData()						            | void                               | 重置默认值
- vdSubmit(path: string, data?: T, options)                          | void                               | 提交数据（options:{ merge: boolean } = {merge: true}）
+ vdSubmit(path: string, data?: T, options)                          | void                               | 提交数据（options:{ merge: boolean } = {merge: false}）如果data不传入则默认使用vdData的值， 如果merge设置为true的话，data的参数会merge到vdData上。
  vdSubmitSuccess(result?: T)                                        | void                 	         | 提交成功回调，可以重写父类方法
  vdSubmitError(err?: any)                                           | void                               | 提价失败回调，可以重写父类方法
  vdValidate($refs?, formName, success, err)                         | void              		 | 表单验证
