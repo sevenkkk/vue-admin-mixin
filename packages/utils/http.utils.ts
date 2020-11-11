@@ -36,6 +36,9 @@ const doFetch = async <T>(doRequest: () => Promise<ResponseBody>): Promise<UseRe
 			if (response.status === 403) {
 				errorMessage = VdConfigService.config?.message403 || response.data.errorMessage;
 			}
+			if (response.status === 401) {
+				errorMessage = VdConfigService.config?.message401 || response.data.errorMessage;
+			}
 			errorCode = response.data.errorCode;
 			errorMessage = response.data.errorMessage || VdConfigService.config?.systemErrorMessage;
 		}

@@ -67,6 +67,17 @@ export const vdMessage = async <T>(fetch: () => Promise<UseResult<T>>,
 					}
 					VdConfigService.config.handle403(__errorMessage);
 				}, 500);
+			} else if (errorCode == '401') {
+				if (timeout != null) {
+					clearTimeout(timeout);
+				}
+
+				timeout = setTimeout(function () {
+					if (VdConfigService.config?.showMessage401) {
+						VdConfigService.config.showErrorMessage(__errorMessage);
+					}
+					VdConfigService.config.handle401(__errorMessage);
+				}, 500);
 			} else {
 				setTimeout(() => {
 					VdConfigService.config.showErrorMessage(__errorMessage);
