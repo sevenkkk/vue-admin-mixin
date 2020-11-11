@@ -18,7 +18,7 @@ abstract class BaseSubmitMixin<T, R> extends VdRespObjMixin<T> {
 	 * @param data 请求数据
 	 * @param options 参数问题
 	 */
-	public async vdSubmit(path: string, data?: T, options: { merge: boolean } = {merge: true}): Promise<UseResult<R>> {
+	public async vdSubmit(path: string, data?: T, options: { merge: boolean } = {merge: false}): Promise<UseResult<R>> {
 		let _data = this.vdData;
 		if (data) {
 			if (options?.merge) {
