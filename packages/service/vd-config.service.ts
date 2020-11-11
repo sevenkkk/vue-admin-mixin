@@ -30,7 +30,7 @@ export interface VdConfigOptions {
 /**
  * 默认配置实现，继承重写对象方法
  */
-export class VdDefaultConfigService extends Vue implements VdConfigOptions {
+export class VdDefaultConfigService implements VdConfigOptions {
 
 	message401 = '登录已过期，请重新登录!';
 	message403 = '您没有权限！';
