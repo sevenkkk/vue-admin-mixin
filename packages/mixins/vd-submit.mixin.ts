@@ -1,8 +1,7 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { VdRespObjMixin } from './base/vd-resp-obj-mixin';
 import { UseResult } from '../model/response-body';
-import { VdCommonService } from '../service/vd-common.service';
-import { VdConfigService } from '../service/vd-config.service';
+import { vdValidate } from '../utils/validate.utils';
 
 // @ts-ignore
 @Component
@@ -67,30 +66,13 @@ abstract class BaseSubmitMixin<T, R> extends VdRespObjMixin<T> {
 	public abstract vdHandleSubmit(): void;
 
 	/**
-	 * 表单验证
+	 * 用于表单验证
 	 * @param formName ref名称
 	 * @param success 成功回调
-	 * @param err 失败回调
+	 * @param err 错误回调
 	 */
 	protected vdValidate(formName: string | string[], success: () => void, err?: () => void) {
-		if (!formName) {
-			throw new Error('必须指定formName');
-		}
-		let formNames: string[] = [];
-		if (VdCommonService.isString(formName)) {
-			formNames = [formName as string];
-		} else {
-			formNames = formName as string[];
-		}
-		const result = VdConfigService.config.handleFormValidate(this.$refs, formNames);
-
-		if (!result) {
-			success();
-		} else {
-			if (err) {
-				err();
-			}
-		}
+		vdValidate(this.$refs, formName, success, err);
 	}
 }
 
