@@ -140,9 +140,8 @@ export namespace VdTable {
 	@Component
 	export class ParamMixin<T> extends VdMixin {
 
-		public get vdKey() {
-			return this.$parent.$props?.vdKey;
-		}
+		// 设置当前key
+		@Prop({default: () => ''}) vdKey: string;
 
 		// 参数
 		public vdParams = {} as any;
@@ -185,9 +184,8 @@ export namespace VdTable {
 	@Component
 	export class ListMixin<T> extends VdMixin {
 
-		public get vdKey() {
-			return this.$parent.$props?.vdKey;
-		}
+		// 设置当前key
+		@Prop({default: () => ''}) vdKey: string;
 
 		public vdList: Array<T> = [];
 
@@ -216,7 +214,7 @@ export namespace VdTable {
 
 		/**
 		 * 同步选中项
-		 * @param list 选择项
+		 * @param list 选中选项
 		 */
 		public vdSelectionChange(list: T[]) {
 			this.vdSelected = list;
