@@ -31,6 +31,12 @@ There are several Mixins:
 - [`VdEditMixin`](#VdEditMixin)
 - [`VdDefaultConfigService`](#VdDefaultConfigService)
 
+There are several Decorators:
+
+- [`ModalCallback`](#ModalCallback)
+- [`Confirm`](#Confirm)
+- [`Validate`](#Validate)
+
 ### <a id="VdMixin"></a> `VdMixin` mixin
 ### 提供基本方法，所有的Mixin都继承了这个类
 
@@ -458,6 +464,58 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 	VdSubmitMixin,
 ) {
 }
+```
+
+### <a id="ModalCallback"></a> `@ModalCallback` decorators
+### 使用多个modal时，使用@ModalCallback来接受具体回调. 需要混入VdModal.CrlMixin 或者 VdModal.CallbackMixin.
+
+```ts
+	/**
+	 *  pipe key1 回调
+	 */
+	@ModalCallback(’key1‘)
+	public vdModalCallbackByPipeKey1(data?: any) {
+	}
+	
+	/**
+	 *  pipe key2 回调
+	 */
+	@ModalCallback(’key2‘)
+	public vdModalCallbackByPipeKey2(data?: any) {
+	}
+```
+
+### <a id="Confirm"></a> `@Confirm` decorators
+### 确认提示框注解，使用时传入标题和内容，确认后执行方法。跟 VdMixin的 this.vdConfirm 使用方法一样。
+
+```ts
+	/**
+	 * 启用禁用
+	 * @param isEnabled 开启关闭
+	 */
+	@Confirm(isEnabled => confirmAutoEnabled(isEnabled, PLATFORM))  // 可以使用被注释的方法的参数进行回调的入参值
+	public toggleEnabled(isEnabled: Enabled) {
+	}
+	
+	/**
+	 * 重置密码
+	 */
+	@Confirm({title:'确认', content:'确定要重置密码吗？'})
+	public handleResetPwd() {
+	}
+
+```
+
+### <a id="Validate"></a> `@Validate` decorators
+### form验证注解，使用时传入被标记 ref的form的refName，验证成功时执行方法。跟 VdMixin的 this.vdValidate 使用方法一样。
+
+```ts
+	/**
+	 * 保存提交
+	 */
+	@Validate(['baseForm', 'userForm']) //  或者单个form使用： @Validate(’userForm‘)
+	public vdHandleSubmit(): void {
+	}
 ```
 
 ### <a id="默认使用VdDefaultConfigService"></a> `默认使用VdDefaultConfigService` service
