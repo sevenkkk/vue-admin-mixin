@@ -8,7 +8,7 @@ export class VdObjMixin<T> extends VdRespObjMixin<T> {
 	private loadPath!: string;
 
 	// 是否已经加载
-	private isLoaded = false;
+	public isLoaded = false;
 
 	// 无数据
 	public get vdOEmpty() {
