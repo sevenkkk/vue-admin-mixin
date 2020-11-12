@@ -1,6 +1,6 @@
 {
   "name": "vue-admin-mixin",
-  "version": "0.2.14",
+  "version": "0.2.20",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",

@@ -2,7 +2,6 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { EventBus } from '../utils/event-bus.utils';
 import { VdMixin } from './base/vd.mixin';
 
-
 const VD_MODAL_OPEN_MODAL = 'vd-model-open-modal';
 const VD_MODAL_CLOSE_MODAL = 'vd-model-close-modal';
 const VD_MODAL_DEFAULT_PIPE_KEY = 'vd-pipe-key';
@@ -116,13 +115,13 @@ export namespace VdModal {
 		 * @param data 传入数据
 		 */
 		protected vdShowModal(data?: any) {
-		};
+		}
 
 		/**
 		 * 关闭模态框回调
 		 */
 		protected vdHiddenModal() {
-		};
+		}
 
 		/**
 		 * 关闭模态框
@@ -162,20 +161,20 @@ export namespace VdModal {
 	export class CallbackMixin extends VdMixin {
 
 		// 当前mode
-		private _vdPageMode = PageMode.ADD;
+		public vdPageMode = PageMode.ADD;
 		private _pipe;
 
 		public get vdIsUpdate() {
-			return this._vdPageMode == PageMode.UPDATE;
+			return this.vdPageMode == PageMode.UPDATE;
 		}
 
 		public get vdIsAdd() {
-			return this._vdPageMode == PageMode.ADD;
+			return this.vdPageMode == PageMode.ADD;
 		}
 
 		protected created() {
 			EventBus.$on(VD_MODAL_CLOSE_MODAL, ({data, mode, pipe}) => {
-					this._vdPageMode = mode;
+					this.vdPageMode = mode;
 					this._pipe = pipe;
 					this.vdModalCallback(data, pipe);
 				},
