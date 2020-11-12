@@ -1,70 +1,18 @@
 import axios from 'axios';
 // @ts-ignore
 import qs from 'qs';
-import { VdConfigService, VdConfirmInfo } from '../service/vd-config.service';
+import { VdConfigService } from '../service/vd-config.service';
 import { VdCommonService } from '../service/vd-common.service';
 import { UseResult, ResponseBody } from '../model/response-body';
-import { vdMessage, VdMessageOptions } from './message.utils';
-
-/**
- * 请求配置选项
- */
-export interface VdRequestOptions {
-	load?: boolean; // 是否是获取请求
-	loading?: boolean; // 是否加载loading框
-	message?: VdMessageOptions; // 处理message选项
-	confirm?: VdConfirmInfo; // 确认提示消息
-}
-
-/**
- * 发送api请求
- * @param url  请求地址
- * @param data 请求数据
- */
-export const vdFetch = <T>(url: string, data?: Array<Object> | Object): Promise<UseResult<T>> => {
-	if (!url) {
-		throw new Error('The request URL is not defined.');
-	}
-	return doFetch(() => formPost(url, data));
-};
-
-/**
- * 发送请求，处理返回值
- * @param doRequest 请求体
- */
-const doFetch = async <T>(doRequest: () => Promise<ResponseBody>): Promise<UseResult<T>> => {
-	try {
-		const {success, count, payload, errorMessage} = await doRequest();
-		return {success, payload, errorMessage, totalCount: count};
-	} catch (err) {
-		let errorMessage;
-		let errorCode;
-		const response = err.response;
-		if (response) {
-			if (response.status === 400) {
-				errorMessage = response.data.errorMessage || '';
-			}
-			if (response.status === 403) {
-				errorMessage = VdConfigService.config?.message403 || response.data.errorMessage;
-			}
-			if (response.status === 401) {
-				errorMessage = VdConfigService.config?.message401 || response.data.errorMessage;
-			}
-			errorCode = response.data.errorCode;
-			errorMessage = response.data.errorMessage || VdConfigService.config?.systemErrorMessage;
-		}
-		/* eslint-disable */
-		// @ts-ignore
-		return {success: false, errorCode: errorCode || '500', errorMessage: errorMessage};
-	}
-};
+import { vdMessage } from './message.utils';
+import { VdRequestOptions } from '../model/request-options';
 
 /**
  * 请求以form表单形式进行提交
  * @param url 请求地址
  * @param data 请求参数，json类型进行转成表单提交格式
  */
-const formPost = (url: string, data?: Array<any> | Object): Promise<ResponseBody> => {
+const formPost = (url: string, data?: any): Promise<ResponseBody> => {
 
 	if (data && !(VdCommonService.isObject(data) || VdCommonService.isArray(data))) {
 		throw new Error('参数值必须为数组和对象!');
@@ -111,6 +59,8 @@ const formPost = (url: string, data?: Array<any> | Object): Promise<ResponseBody
 			}
 		}
 	} catch (e) {
+		/* eslint-disable */
+		// @ts-ignore
 		console.log(e);
 	}
 
@@ -123,6 +73,49 @@ const formPost = (url: string, data?: Array<any> | Object): Promise<ResponseBody
 };
 
 /**
+ * 发送请求，处理返回值
+ * @param doRequest 请求体
+ */
+const doFetch = async <T>(doRequest: () => Promise<ResponseBody>): Promise<UseResult<T>> => {
+	try {
+		const {success, count, payload, errorMessage} = await doRequest();
+		return {success, payload, errorMessage, totalCount: count};
+	} catch (err) {
+		let errorMessage;
+		let errorCode;
+		const response = err.response;
+		if (response) {
+			if (response.status === 400) {
+				errorMessage = response.data.errorMessage || '';
+			}
+			if (response.status === 403) {
+				errorMessage = VdConfigService.config?.message403 || response.data.errorMessage;
+			}
+			if (response.status === 401) {
+				errorMessage = VdConfigService.config?.message401 || response.data.errorMessage;
+			}
+			errorCode = response.data.errorCode;
+			errorMessage = response.data.errorMessage || VdConfigService.config?.systemErrorMessage;
+		}
+		/* eslint-disable */
+		// @ts-ignore
+		return {success: false, errorCode: errorCode || '500', errorMessage: errorMessage};
+	}
+};
+
+/**
+ * 发送api请求
+ * @param url  请求地址
+ * @param data 请求数据
+ */
+export const vdFetch = <T>(url: string, data?: any): Promise<UseResult<T>> => {
+	if (!url) {
+		throw new Error('The request URL is not defined.');
+	}
+	return doFetch(() => formPost(url, data));
+};
+
+/**
  * 发送请求api
  * @param url url地址
  * @param data 参数
@@ -130,17 +123,12 @@ const formPost = (url: string, data?: Array<any> | Object): Promise<ResponseBody
  */
 export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions): Promise<UseResult<T>> => {
 	if (options) {
-		const {message, confirm, load, loading} = options;
+		const {message, load} = options;
 		let _message = message;
 		if (load) {
 			_message = {...message, showSuccess: false};
 		}
-		if (confirm) {
-			return VdConfigService.config.handleConfirm(confirm).then(() => {
-				return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
-			});
-		}
-		return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
+		return vdMessage<T>(() => vdFetch(url, data), _message);
 	}
 	return vdMessage<T>(() => vdFetch(url, data));
 };

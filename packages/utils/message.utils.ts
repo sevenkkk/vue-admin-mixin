@@ -1,17 +1,7 @@
 import { UseResult } from '../model/response-body';
 import { VdCommonService } from '../service/vd-common.service';
 import { VdConfigService } from '../service/vd-config.service';
-
-/**
- * 消息提示配置选项
- */
-export interface VdMessageOptions {
-	showMessage?: boolean; // 是否显示消息
-	successMessage?: string; // 成功消息内容
-	errorMessage?: string; // 错误消息内容
-	showError?: boolean; // 是否显示错误消息
-	showSuccess?: boolean; // 是否显示成功消息
-}
+import { VdMessageOptions } from '../model/request-options';
 
 let timeout: any = null;
 

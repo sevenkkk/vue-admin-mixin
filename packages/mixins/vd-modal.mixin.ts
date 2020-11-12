@@ -82,9 +82,9 @@ export namespace VdModal {
 					({data, mode, resolve, isShow}) => {
 						if (isShow) {
 							this.vdInputData = data;
-							this.vdVisible = isShow;
 							this.vdPageMode = mode;
 							this._resolve = resolve;
+							this.vdVisible = isShow;
 						} else {
 							this.vdVisible = false;
 						}
@@ -106,7 +106,7 @@ export namespace VdModal {
 			if (visible) {
 				this.vdShowModal(this.vdInputData);
 			} else {
-				this.vdHiddenModal();
+				setTimeout(() => this.vdHiddenModal(), 500);
 			}
 		}
 

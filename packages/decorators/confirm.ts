@@ -1,6 +1,7 @@
 import { createDecorator } from 'vue-class-component';
-import { VdConfirmInfo, VdConfigService } from '../service/vd-config.service';
+import { VdConfigService } from '../service/vd-config.service';
 import { VdCommonService } from '../service/vd-common.service';
+import { VdConfirmInfo } from '../model/request-options';
 
 const noop = () => {
 };

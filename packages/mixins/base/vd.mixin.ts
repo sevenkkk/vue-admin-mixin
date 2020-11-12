@@ -1,8 +1,9 @@
 import { Component } from 'vue-property-decorator';
 import { UseResult } from '../../model/response-body';
-import { VdConfigService, VdConfirmInfo } from '../../service/vd-config.service';
-import { VdRequestOptions, vdRequest } from '../../utils/http.utils';
+import { VdConfigService } from '../../service/vd-config.service';
 import { VdHttpMixin } from './vd-http.mixin';
+import { vdMessage } from '../../utils/message.utils';
+import { VdRequestOptions, VdConfirmInfo } from '../../model/request-options';
 
 @Component
 export class VdMixin extends VdHttpMixin {
@@ -22,6 +23,19 @@ export class VdMixin extends VdHttpMixin {
 	 * @param options 配置
 	 */
 	protected vdRequest<T>(url: string, data?: any, options?: VdRequestOptions): Promise<UseResult<T>> {
-		return vdRequest<T>(url, data, options);
+		if (options) {
+			const {message, confirm, load, loading} = options;
+			let _message = message;
+			if (load) {
+				_message = {...message, showSuccess: false};
+			}
+			if (confirm) {
+				return VdConfigService.config.handleConfirm(confirm).then(() => {
+					return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
+				});
+			}
+			return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
+		}
+		return vdMessage<T>(() => this.vdFetch(url, data));
 	}
 }

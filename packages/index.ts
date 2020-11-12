@@ -14,6 +14,9 @@ export * from './service/vd-common.service';
 export * from './service/vd-config.service';
 
 export * from './model/response-body';
+export * from './model/config-options';
+export * from './model/request-options';
+
 export * from './utils/http.utils';
 export * from './utils/message.utils';
 
