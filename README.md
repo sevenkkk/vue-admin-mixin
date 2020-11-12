@@ -29,13 +29,18 @@ There are several Mixins:
 - [`VdObjMixin`](#VdObjMixin)
 - [`VdSubmitMixin`](#VdSubmitMixin)
 - [`VdEditMixin`](#VdEditMixin)
-- [`VdDefaultConfigService`](#VdDefaultConfigService)
 
 There are several Decorators:
 
 - [`ModalCallback`](#ModalCallback)
 - [`Confirm`](#Confirm)
 - [`Validate`](#Validate)
+
+## Usage
+
+There are several Service:
+
+- [`VdDefaultConfigService`](#VdDefaultConfigService)
 
 ### <a id="VdMixin"></a> `VdMixin` mixin
 ### 提供基本方法，所有的Mixin都继承了这个类
@@ -467,7 +472,7 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ```
 
 ### <a id="ModalCallback"></a> `@ModalCallback` decorators
-### 使用多个modal时，使用@ModalCallback来接受具体回调. 需要混入VdModal.CrlMixin 或者 VdModal.CallbackMixin.
+### 使用多个modal时，使用`@ModalCallback`来接受具体回调. 需要混入`VdModal.CrlMixin` 或者 `VdModal.CallbackMixin`.
 
 ```ts
 	/**
@@ -486,7 +491,7 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ```
 
 ### <a id="Confirm"></a> `@Confirm` decorators
-### 确认提示框注解，使用时传入标题和内容，确认后执行方法。跟 VdMixin的 this.vdConfirm 使用方法一样。
+### 确认提示框注解，使用时传入标题和内容，确认后执行方法。跟 `VdMixin`的 `this.vdConfirm` 使用方法一样。
 
 ```ts
 
@@ -508,7 +513,7 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ```
 
 ### <a id="Validate"></a> `@Validate` decorators
-### form验证注解，使用时传入被标记 ref的form的refName，验证成功时执行方法。跟 VdMixin的 this.vdValidate 使用方法一样。
+### form验证注解，使用时传入被标记 ref的form的refName，验证成功时执行方法。跟 `VdMixin`的 ``this.vdValidate 使用方法一样。
 
 ```ts
 	/**
@@ -520,7 +525,7 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ```
 
 ### <a id="默认使用VdDefaultConfigService"></a> `默认使用VdDefaultConfigService` service
-### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用VdDefaultConfigService， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
+### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用``VdDefaultConfigService， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
 ```ts
 
 @Component
