@@ -474,14 +474,14 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 	 *  pipe key1 回调
 	 */
 	@ModalCallback(’key1‘)
-	public vdModalCallbackByPipeKey1(data?: any) {
+	public handleModalCallbackByPipeKey1(data?: any) {
 	}
 	
 	/**
 	 *  pipe key2 回调
 	 */
 	@ModalCallback(’key2‘)
-	public vdModalCallbackByPipeKey2(data?: any) {
+	public handleModalCallbackByPipeKey2(data?: any) {
 	}
 ```
 
