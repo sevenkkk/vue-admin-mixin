@@ -489,6 +489,14 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ### 确认提示框注解，使用时传入标题和内容，确认后执行方法。跟 VdMixin的 this.vdConfirm 使用方法一样。
 
 ```ts
+
+	/**
+	 * 重置密码
+	 */
+	@Confirm({title:'确认', content:'确定要重置密码吗？'})
+	public handleResetPwd() {
+	}
+	
 	/**
 	 * 启用禁用
 	 * @param isEnabled 开启关闭
@@ -497,13 +505,6 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 	public toggleEnabled(isEnabled: Enabled) {
 	}
 	
-	/**
-	 * 重置密码
-	 */
-	@Confirm({title:'确认', content:'确定要重置密码吗？'})
-	public handleResetPwd() {
-	}
-
 ```
 
 ### <a id="Validate"></a> `@Validate` decorators
