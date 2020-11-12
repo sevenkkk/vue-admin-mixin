@@ -524,8 +524,8 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 	}
 ```
 
-### <a id="默认使用VdDefaultConfigService"></a> `默认使用VdDefaultConfigService` service
-### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用``VdDefaultConfigService， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
+### <a id="VdDefaultConfigService"></a> `默认使用VdDefaultConfigService` service
+### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用`VdDefaultConfigService`， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
 ```ts
 
 @Component
