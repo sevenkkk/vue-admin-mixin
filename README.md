@@ -36,8 +36,6 @@ There are several Decorators:
 - [`Confirm`](#Confirm)
 - [`Validate`](#Validate)
 
-## Usage
-
 There are several Service:
 
 - [`VdDefaultConfigService`](#VdDefaultConfigService)
