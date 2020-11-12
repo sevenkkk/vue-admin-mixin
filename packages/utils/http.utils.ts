@@ -1,9 +1,20 @@
 import axios from 'axios';
 // @ts-ignore
 import qs from 'qs';
-import { VdConfigService } from '../service/vd-config.service';
+import { VdConfigService, VdConfirmInfo } from '../service/vd-config.service';
 import { VdCommonService } from '../service/vd-common.service';
 import { UseResult, ResponseBody } from '../model/response-body';
+import { vdMessage, VdMessageOptions } from './message.utils';
+
+/**
+ * 请求配置选项
+ */
+export interface VdRequestOptions {
+	load?: boolean; // 是否是获取请求
+	loading?: boolean; // 是否加载loading框
+	message?: VdMessageOptions; // 处理message选项
+	confirm?: VdConfirmInfo; // 确认提示消息
+}
 
 /**
  * 发送api请求
@@ -12,7 +23,7 @@ import { UseResult, ResponseBody } from '../model/response-body';
  */
 export const vdFetch = <T>(url: string, data?: Array<Object> | Object): Promise<UseResult<T>> => {
 	if (!url) {
-		throw new Error('请求url未定义。');
+		throw new Error('The request URL is not defined.');
 	}
 	return doFetch(() => formPost(url, data));
 };
@@ -109,4 +120,27 @@ const formPost = (url: string, data?: Array<any> | Object): Promise<ResponseBody
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		data: _data,
 	}).then(res => res.data);
+};
+
+/**
+ * 发送请求api
+ * @param url url地址
+ * @param data 参数
+ * @param options 配置
+ */
+export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions): Promise<UseResult<T>> => {
+	if (options) {
+		const {message, confirm, load, loading} = options;
+		let _message = message;
+		if (load) {
+			_message = {...message, showSuccess: false};
+		}
+		if (confirm) {
+			return VdConfigService.config.handleConfirm(confirm).then(() => {
+				return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
+			});
+		}
+		return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
+	}
+	return vdMessage<T>(() => vdFetch(url, data));
 };
