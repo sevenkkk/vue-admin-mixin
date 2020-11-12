@@ -1,8 +1,9 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { VdBaseListMixin } from './base/vd-base-list.mixin';
 import { UseResult } from '../model/response-body';
 import { VdMixin } from './base/vd.mixin';
 import { EventBus } from '../utils/event-bus.utils';
+import { findComponentByAttrName } from '../utils/vue-component.utils';
 
 const VD_PAGE_SYNC_PARAMS_KEY_1 = 'vd-page-sync-params-key-1';
 const VD_PAGE_SYNC_PARAMS_KEY_2 = 'vd-page-sync-params-key-2';
@@ -19,8 +20,12 @@ export namespace VdTable {
 	@Component
 	export class MainMixin<P, R> extends VdBaseListMixin<P, R> {
 
-		// 设置当前key
-		@Prop({default: () => ''}) vdKey: string;
+		private get vdKey() {
+			// @ts-ignore
+			return this?._uid;
+		}
+
+		public vdTableMainMixin  = true;
 
 		// 数据总条数
 		public vdTotal = 0;
@@ -140,8 +145,9 @@ export namespace VdTable {
 	@Component
 	export class ParamMixin<T> extends VdMixin {
 
-		// 设置当前key
-		@Prop({default: () => ''}) vdKey: string;
+		private get vdKey() {
+			return findComponentByAttrName(this,'vdTableMainMixin')?._uid;
+		}
 
 		// 参数
 		public vdParams = {} as any;
@@ -184,8 +190,9 @@ export namespace VdTable {
 	@Component
 	export class ListMixin<T> extends VdMixin {
 
-		// 设置当前key
-		@Prop({default: () => ''}) vdKey: string;
+		private get vdKey() {
+			return findComponentByAttrName(this,'vdTableMainMixin')?._uid;
+		}
 
 		public vdList: Array<T> = [];
 
