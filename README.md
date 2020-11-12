@@ -526,102 +526,107 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 @Component
 export default class App extends Vue {
 	public created() {
-		VdConfigService.setUp(new VdOptionService());
+		VdConfigService.setUp(new VdOptionService(this));
 	}
 }
 
-class VdOptionService extends VdDefaultConfigService {
-	loadingCrl: any;
+export class VdOptionService extends VdDefaultConfigService {
 
-	/**
-	 * 处理确认框
-	 * @param info 确认框
-	 */
-	handleConfirm(info: VdConfirmInfo): Promise<any> {
-		return this.$confirm(info.content, info.title, {
-			confirmButtonText: '确定',
-			cancelButtonText: '取消',
-			closeOnClickModal: false,
-		});
-	}
 
-	/**
-	 * 处理403
-	 */
-	handle403(): void {
-		this.$router.push({ name: 'Login' }).then();
-	}
-	
-	/**
-	 * 处理401
-	 */
-	handle401(): void {
-		this.$router.push({ name: 'Login' }).then();
-	}
+    constructor(public vue: any){
+        super();
+    }
 
-	/**
-	 * 提示失败信息
-	 * @param message
-	 */
-	showErrorMessage(message: string): void {
-		Message.error(message);
-	}
+    loadingCrl: any;
 
-	/**
-	 * 提示成功信息
-	 * @param message
-	 */
-	showSuccessMessage(message: string): void {
-		Message.success(message);
-	}
+    /**
+     * 处理确认框
+     * @param info 确认框
+     */
+    handleConfirm(info: VdConfirmInfo): Promise<any> {
+        return this.vue.$confirm(info.content, info.title, {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            closeOnClickModal: false,
+        });
+    }
 
-	/**
-	 * 开始loading加载
-	 */
-	handleStartLoading(): any {
-		this.loadingCrl = this.$loading({
-			lock: true,
-		});
-	}
+    /**
+     * 处理403
+     */
+    handle403(): void {
+        this.vue.$router.push({name: 'Login'}).then();
+    }
 
-	/**
-	 * 结束加载loading
-	 */
-	handleCloseLoading(): void {
-		if (this.loadingCrl) {
-			this.loadingCrl.close();
-		}
-	}
+    /**
+     * 处理401
+     */
+    handle401(): void {
+        this.vue.$router.push({name: 'Login'}).then();
+    }
 
-	/**
-	 * 处理表单验证
-	 * @param $refs refs
-	 * @param formNames 表单ref名
-	 */
-	handleFormValidate($refs: { [key: string]: Vue | Element | Vue[] | Element[] }, formNames: string[]) {
-		let _result = false;
-		try {
-			formNames.forEach(formName => {
-				const target = $refs[formName];
-				if (target) {
-					/* eslint-disable */
-					// @ts-ignore
-					target?.validate((result, item) => {
-						if (!result) {
-							for (const key in item) {
-								setTimeout(() => this.showErrorMessage(item[key][0].message), 1);
-							}
-							_result = true;
-						}
-					});
-				}
-			});
-		
-		} catch (e) {
-			console.log(e);
-		}
-		return _result;
-	}
+    /**
+     * 提示失败信息
+     * @param message
+     */
+    showErrorMessage(message: string): void {
+        Message.error(message);
+    }
+
+    /**
+     * 提示成功信息
+     * @param message
+     */
+    showSuccessMessage(message: string): void {
+        Message.success(message);
+    }
+
+    /**
+     * 开始loading加载
+     */
+    handleStartLoading(): any {
+        this.loadingCrl = this.vue.$loading({
+            lock: true,
+        });
+    }
+
+    /**
+     * 结束加载loading
+     */
+    handleCloseLoading(): void {
+        if (this.loadingCrl) {
+            this.loadingCrl.close();
+        }
+    }
+
+    /**
+     * 处理表单验证
+     * @param $refs refs
+     * @param formNames 表单ref名
+     */
+    handleFormValidate($refs: { [key: string]: Vue | Element | Vue[] | Element[] }, formNames: string[]) {
+        let _result = false;
+        try {
+            formNames.forEach(formName => {
+                const target = $refs[formName];
+                if (target) {
+                    /* eslint-disable */
+                    // @ts-ignore
+                    target?.validate((result, item) => {
+                        if (!result) {
+                            for (const key in item) {
+                                setTimeout(() => this.showErrorMessage(item[key][0].message), 1);
+                            }
+                            _result = true;
+                        }
+                    });
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        return _result;
+    }
 }
 
 ```
