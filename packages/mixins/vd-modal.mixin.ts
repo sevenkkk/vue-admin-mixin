@@ -173,12 +173,14 @@ export namespace VdModal {
 		}
 
 		protected created() {
-			EventBus.$on(VD_MODAL_CLOSE_MODAL, ({data, mode, pipe}) => {
-					this.vdPageMode = mode;
-					this._pipe = pipe;
-					this.vdModalCallback(data, pipe);
-				},
-			);
+			setTimeout(() => {
+				EventBus.$on(VD_MODAL_CLOSE_MODAL, ({data, mode, pipe}) => {
+						this.vdPageMode = mode;
+						this._pipe = pipe;
+						this.vdModalCallback(data, pipe);
+					},
+				);
+			}, 300);
 		}
 
 		protected beforeDestroy() {
