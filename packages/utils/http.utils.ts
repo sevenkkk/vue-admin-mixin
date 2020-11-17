@@ -130,5 +130,6 @@ export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions
 		}
 		return vdMessage<T>(() => vdFetch(url, data), _message);
 	}
-	return vdMessage<T>(() => vdFetch(url, data));
+
+	return vdMessage<T>(() => vdFetch(url, data), !data ? {showSuccess: false} : undefined);
 };
