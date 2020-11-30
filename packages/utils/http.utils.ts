@@ -21,46 +21,45 @@ const formPost = (url: string, data?: any): Promise<ResponseBody> => {
 	let _data = undefined;
 
 	try {
-		if (data) {
-			if (data && VdCommonService.isObject(data)) {
-				const target: any = {};
-				const other: any = {};
-				for (const key in data) {
+		if (VdCommonService.isObject(data)) {
+			const mapKeys = data.mapKeys || [];
+			const map: any = {};
+			const other: any = {};
+			for (const key in data) {
+				// 如果是map的话 以 user.name 这种方式传输
+				// @ts-ignore
+				if (mapKeys.some(k => k === key)) {
 					// @ts-ignore
-					if (VdCommonService.isArray(data[key])) {
-						// @ts-ignore
-						target[key] = data[key];
-					} else {
-						// @ts-ignore
-						other[key] = data[key];
-					}
+					map[key] = data[key];
+				} else {
+					// 对象和数组的haul 以 user[name] user[0].name 的方式传输
+					// @ts-ignore
+					other[key] = data[key];
 				}
-
-				let _target;
-				let _other;
-
-				if (Object.keys(target).length !== 0) {
-					_target = qs.stringify(target, {allowDots: true, skipNulls: true});
-				}
-
-				if (Object.keys(other).length !== 0) {
-					_other = qs.stringify(other, {skipNulls: true});
-				}
-
-				if (_target) {
-					_data = _target;
-				}
-
-				if (_other) {
-					_data = _data ? `${_data}&${_other}` : _other;
-				}
-			} else {
-				_data = qs.stringify(data, {allowDots: true, skipNulls: true});
 			}
+
+			let _map;
+			let _other;
+
+			if (Object.keys(map).length !== 0) {
+				_map = qs.stringify(map, {skipNulls: true});
+			}
+
+			if (Object.keys(other).length !== 0) {
+				_other = qs.stringify(other, {allowDots: true, skipNulls: true});
+			}
+
+			if (_map) {
+				_data = _map;
+			}
+
+			if (_other) {
+				_data = _data ? `${_data}&${_other}` : _other;
+			}
+		} else {
+			_data = qs.stringify(data, {allowDots: true, skipNulls: true});
 		}
 	} catch (e) {
-		/* eslint-disable */
-		// @ts-ignore
 		console.log(e);
 	}
 
@@ -133,3 +132,25 @@ export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions
 
 	return vdMessage<T>(() => vdFetch(url, data), !data ? {showSuccess: false} : undefined);
 };
+
+/**
+ * 上传图片
+ * @param url 地址
+ * @param file 文件
+ * @param obj 附加参数
+ */
+export const vdUpload = (url: string, file: File, obj?: Object): Promise<UseResult<string>> => {
+	let param = new FormData();
+	param.append('file', file);
+
+	if (obj) {
+		Object.keys(obj).forEach(key => param.append(key, obj[key]));
+	}
+
+	let config = {
+		headers: {'Content-Type': 'multipart/form-data'},
+	};
+	return axios.post(url, param, config)
+		.then(res => res.data as UseResult<string>);
+};
+
