@@ -1,5 +1,5 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { UseResult } from '../../model/response-body';
+import { UseResult } from '../../model/use-result';
 import { vdFetch } from '../../utils/http.utils';
 import { VdConfigService } from '../../service/vd-config.service';
 
@@ -15,9 +15,13 @@ export class VdHttpMixin extends Vue {
 	private handleVdLoading(loading: boolean) {
 		if (this._isLoading) {
 			if (loading) {
-				VdConfigService.config.handleStartLoading();
+				if (VdConfigService.config?.handleStartLoading) {
+					VdConfigService.config?.handleStartLoading();
+				}
 			} else {
-				VdConfigService.config.handleCloseLoading();
+				if (VdConfigService.config?.handleCloseLoading) {
+					VdConfigService.config?.handleCloseLoading();
+				}
 			}
 		}
 	}

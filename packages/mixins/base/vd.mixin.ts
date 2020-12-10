@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import { UseResult } from '../../model/response-body';
+import { UseResult } from '../../model/use-result';
 import { VdConfigService } from '../../service/vd-config.service';
 import { VdHttpMixin } from './vd-http.mixin';
 import { vdMessage } from '../../utils/message.utils';
@@ -12,8 +12,11 @@ export class VdMixin extends VdHttpMixin {
 	 * 确认提示
 	 * @param info 消息
 	 */
-	protected vdConfirm<T>(info: VdConfirmInfo): Promise<UseResult<T>> {
-		return VdConfigService.config.handleConfirm(info);
+	protected vdConfirm<T>(info: VdConfirmInfo): Promise<any> {
+		if (VdConfigService.config.handleConfirm) {
+			return VdConfigService.config.handleConfirm(info);
+		}
+		return new Promise(res => res(null));
 	}
 
 	/**
@@ -29,8 +32,8 @@ export class VdMixin extends VdHttpMixin {
 			if (load) {
 				_message = {...message, showSuccess: false};
 			}
-			if (confirm) {
-				return VdConfigService.config.handleConfirm(confirm).then(() => {
+			if (confirm && VdConfigService.config?.handleConfirm) {
+				return VdConfigService.config?.handleConfirm(confirm).then(() => {
 					return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
 				});
 			}

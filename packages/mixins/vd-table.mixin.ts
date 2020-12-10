@@ -1,6 +1,6 @@
 import { Component, Watch } from 'vue-property-decorator';
 import { VdBaseListMixin } from './base/vd-base-list.mixin';
-import { UseResult } from '../model/response-body';
+import { UseResult } from '../model/use-result';
 import { VdMixin } from './base/vd.mixin';
 import { EventBus } from '../utils/event-bus.utils';
 import { findComponentByAttrName } from '../utils/vue-component.utils';

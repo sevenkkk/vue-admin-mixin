@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { VdRespObjMixin } from './base/vd-resp-obj-mixin';
-import { UseResult } from '../model/response-body';
+import { UseResult } from '../model/use-result';
 
 @Component
 export class VdObjMixin<T> extends VdRespObjMixin<T> {

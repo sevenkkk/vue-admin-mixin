@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { VdBaseListMixin } from './base/vd-base-list.mixin';
-import { UseResult } from '../model/response-body';
+import { UseResult } from '../model/use-result';
 
 @Component
 export class VdListMixin<P, R> extends VdBaseListMixin<P, R> {
@@ -42,15 +42,35 @@ export class VdListMixin<P, R> extends VdBaseListMixin<P, R> {
 	 */
 	public async vdLoadList(path?: string, data?: P): Promise<UseResult<R[]>> {
 		this.vdSetListPath(path);
-		let _data = this.vdParams;
-		if (data) {
-			_data = {...this.vdParams, ...data};
+		try {
+			let _data = this.vdParams;
+			if (data) {
+				_data = {...this.vdParams, ...data};
+			}
+			const res = await this.request(this.vdListPath, _data);
+			if (this.vdIsDefaultSet) {
+				this.vdList = res.payload || [];
+			}
+			this.vdLoadSuccess(res.payload);
+			this.vdLoaded = true;
+			return res;
+		} catch (err) {
+			this.vdLoadError(err);
+			throw err;
 		}
-		const res = await this.request(this.vdListPath, _data);
-		if (this.vdIsDefaultSet) {
-			this.vdList = res.payload || [];
-		}
-		this.vdLoaded = true;
-		return res;
+	}
+
+	/**
+	 * 加载成功回调
+	 * @param result 结果
+	 */
+	protected vdLoadSuccess(result?: R[]) {
+	}
+
+	/**
+	 * 加载失败回调
+	 * @param err 错误
+	 */
+	protected vdLoadError(err?: any) {
 	}
 }

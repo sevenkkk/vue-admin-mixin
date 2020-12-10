@@ -1,4 +1,4 @@
-import { UseResult } from '../model/response-body';
+import { UseResult } from '../model/use-result';
 import { VdCommonService } from '../service/vd-common.service';
 import { VdConfigService } from '../service/vd-config.service';
 import { VdMessageOptions } from '../model/request-options';
@@ -30,14 +30,15 @@ export const vdMessage = async <T>(fetch: () => Promise<UseResult<T>>,
 		if (showMessage && showSuccess) {
 			if (!VdCommonService.isString(payload) && !successMessage) {
 				throw new Error(
-					'Api返回值 「payload」字段的类型不是字符串，请设置options=> showSuccess: false，来取消自动提示成功消息',
+					'Api返回值 「payload」字段的类型不是字符串，请设置options=> showSuccess: false、' +
+					'或者设置load:true,来取消自动提示成功消息',
 				);
 			}
 			const _successMessage = successMessage
 				? successMessage
 				: String(payload) || '操作成功！';
 			setTimeout(() => {
-				VdConfigService.config.showSuccessMessage(_successMessage);
+				VdConfigService.config?.showSuccessMessage(_successMessage);
 			});
 		}
 		return result;
@@ -46,32 +47,31 @@ export const vdMessage = async <T>(fetch: () => Promise<UseResult<T>>,
 			? errorMessage
 			: _errorMessage || VdConfigService.config?.systemErrorMessage;
 		if (showMessage && showError) {
+			if (timeout != null) {
+				clearTimeout(timeout);
+			}
 			if (errorCode == '403') {
-				if (timeout != null) {
-					clearTimeout(timeout);
-				}
-
-				timeout = setTimeout(function () {
+				timeout = setTimeout(() => {
 					if (VdConfigService.config?.showMessage403) {
-						VdConfigService.config.showErrorMessage(__errorMessage);
+						VdConfigService.config?.showErrorMessage(__errorMessage);
 					}
-					VdConfigService.config.handle403(__errorMessage);
+					if (VdConfigService.config?.handle403) {
+						VdConfigService.config.handle403(__errorMessage);
+					}
 				}, 500);
 			} else if (errorCode == '401') {
-				if (timeout != null) {
-					clearTimeout(timeout);
-				}
-
-				timeout = setTimeout(function () {
+				timeout = setTimeout(() => {
 					if (VdConfigService.config?.showMessage401) {
-						VdConfigService.config.showErrorMessage(__errorMessage);
+						VdConfigService.config?.showErrorMessage(__errorMessage);
 					}
-					VdConfigService.config.handle401(__errorMessage);
+					if (VdConfigService.config?.handle401) {
+						VdConfigService.config?.handle401(__errorMessage);
+					}
 				}, 500);
 			} else {
-				setTimeout(() => {
-					VdConfigService.config.showErrorMessage(__errorMessage);
-				});
+				timeout = setTimeout(() => {
+					VdConfigService.config?.showErrorMessage(__errorMessage);
+				}, 500);
 			}
 		}
 		throw result;

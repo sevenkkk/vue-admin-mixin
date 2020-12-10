@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { VdMixin } from './vd.mixin';
-import { UseResult } from '../../model/response-body';
+import { UseResult } from '../../model/use-result';
 
 // @ts-ignore
 @Component

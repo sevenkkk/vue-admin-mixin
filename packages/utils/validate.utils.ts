@@ -19,8 +19,10 @@ export const vdValidate = ($refs: { [key: string]: Vue | Element | Vue[] | Eleme
 	} else {
 		formNames = formName as string[];
 	}
-	const result = VdConfigService.config.handleFormValidate($refs, formNames);
-
+	let result = false;
+	if (VdConfigService.config?.handleFormValidate) {
+		result = VdConfigService.config?.handleFormValidate($refs, formNames) || false;
+	}
 	if (!result) {
 		success();
 	} else {

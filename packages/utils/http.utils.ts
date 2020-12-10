@@ -1,10 +1,10 @@
 import axios from 'axios';
 // @ts-ignore
 import qs from 'qs';
+import { vdMessage } from './message.utils';
 import { VdConfigService } from '../service/vd-config.service';
 import { VdCommonService } from '../service/vd-common.service';
-import { UseResult, ResponseBody } from '../model/response-body';
-import { vdMessage } from './message.utils';
+import { UseResult } from '../model/use-result';
 import { VdRequestOptions } from '../model/request-options';
 
 /**
@@ -12,7 +12,7 @@ import { VdRequestOptions } from '../model/request-options';
  * @param url 请求地址
  * @param data 请求参数，json类型进行转成表单提交格式
  */
-const formPost = (url: string, data?: any): Promise<ResponseBody> => {
+const formPost = (url: string, data?: any): Promise<any> => {
 
 	if (data && !(VdCommonService.isObject(data) || VdCommonService.isArray(data))) {
 		throw new Error('参数值必须为数组和对象!');
@@ -75,10 +75,13 @@ const formPost = (url: string, data?: any): Promise<ResponseBody> => {
  * 发送请求，处理返回值
  * @param doRequest 请求体
  */
-const doFetch = async <T>(doRequest: () => Promise<ResponseBody>): Promise<UseResult<T>> => {
+const doFetch = async <T>(doRequest: () => Promise<any>): Promise<UseResult<T>> => {
 	try {
-		const {success, count, payload, errorMessage} = await doRequest();
-		return {success, payload, errorMessage, totalCount: count};
+		const resData = await doRequest();
+		if (VdConfigService.config?.handleHttpResult) {
+			return {success: true, ...(VdConfigService.config?.handleHttpResult<T>(resData))};
+		}
+		return {success: true, payload: undefined};
 	} catch (err) {
 		let errorMessage;
 		let errorCode;
