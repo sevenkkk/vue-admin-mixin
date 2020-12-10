@@ -399,6 +399,8 @@ VdListMixin 方法:
  vdSetSubAttr()                                                          | void                                  | 设置二级属性字段
  vdDefaultParams()                                                       | P                 		         | 设置默认参数，可以重写(默认是{})
  vdLoadList(path?: string, data?: P)                                     | Promise<UseResult<R[]>>               | 加载数据
+ vdLoadSuccess(result?: P[])                                             | void                 	         | 加载数据回调，可以重写父类方法
+ vdLoadError(err?: any)                                                  | void                                  | 加载数据失败，可以重写父类方法
  vdSetListPath(path?: string)                                            | void              		         | 设置请求参数，vdLoadList 时会自动设置到内部变量上
 
 ---
@@ -511,7 +513,7 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ```
 
 ### <a id="Validate"></a> `@Validate` decorators
-### form验证注解，使用时传入被标记 ref的form的refName，验证成功时执行方法。跟 `VdMixin`的 ``this.vdValidate 使用方法一样。
+### form验证注解，使用时传入被标记 ref的form的refName，验证成功时执行方法。跟 `VdMixin`的 `this.vdValidate` 使用方法一样。
 
 ```ts
 	/**
