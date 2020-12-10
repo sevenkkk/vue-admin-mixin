@@ -523,13 +523,12 @@ export class VdEditMixin<T> extends Mixins<VdObjMixin<T>, VdSubmitMixin<T, strin
 ```
 
 ### <a id="VdDefaultConfigService"></a> `默认使用VdDefaultConfigService` service
-### 可配置选项：一些共通处理内容已经对外暴露接口， 默认使用`VdDefaultConfigService`， 一般情况根据项目需求来实现自定义实现类。以下是使用element-ui组件配置。
+### 可配置选项：一些共通处理内容已经对外暴露接口， 一般情况根据项目需求来实现自定义配置。以下是基于element-ui组件配置。
 ```ts
 
 @Component
 export default class App extends Vue {
 	public created() {
-		public created() {
         		VdConfigService.setup({
         			handleConfirm: (info: VdConfirmInfo) =>
         				this.$confirm(info.content, info.title, {
@@ -584,7 +583,6 @@ export default class App extends Vue {
         			},
         		});
         	}
-	}
 }
 
 ```
