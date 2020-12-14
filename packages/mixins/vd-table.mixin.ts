@@ -117,7 +117,7 @@ export namespace VdTable {
 		public async vdRefresh(data?: P, effectCount?: number): Promise<UseResult<R[]>> {
 			const getPage = () => {
 				if (this.vdUsePage()) {
-					if(effectCount && this.vdList.length + effectCount === 0){
+					if (effectCount && this.vdList.length + effectCount === 0) {
 						this.vdPage = 1;
 					}
 					return this.vdPage;
@@ -206,8 +206,12 @@ export namespace VdTable {
 		/**
 		 * 清空对象
 		 */
-		public vdClear() {
-			this.vdParams = {} as any;
+		public vdClear(params?: T) {
+			if (params) {
+				this.vdParams = {...params};
+			} else {
+				this.vdParams = {} as any;
+			}
 		}
 	}
 
