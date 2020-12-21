@@ -8,11 +8,11 @@ export class VdObjMixin<T> extends VdRespObjMixin<T> {
 	private loadPath!: string;
 
 	// 是否已经加载
-	public isLoaded = false;
+	public vdOLoaded = false;
 
 	// 无数据
 	public get vdOEmpty() {
-		return (this.vdData ? Object.keys(this.vdData).length == 0 : true) && this.isLoaded;
+		return (this.vdData ? Object.keys(this.vdData).length == 0 : true) && this.vdOLoaded;
 	}
 
 	// 是否有数据
@@ -35,7 +35,7 @@ export class VdObjMixin<T> extends VdRespObjMixin<T> {
 		try {
 			const res = await this.vdLoadRequest(this.loadPath, params);
 			this.vdData = res.payload as T;
-			this.isLoaded = true;
+			this.vdOLoaded = true;
 			this.vdLoadSuccess(res.payload);
 			return res;
 		} catch (err) {

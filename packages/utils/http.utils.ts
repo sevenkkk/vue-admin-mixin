@@ -142,7 +142,7 @@ export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions
  * @param file 文件
  * @param obj 附加参数
  */
-export const vdUpload = (url: string, file: File, obj?: Object): Promise<UseResult<string>> => {
+export const vdUpload = <T>(url: string, file: File, obj?: Object): Promise<UseResult<T>> => {
 	let param = new FormData();
 	param.append('file', file);
 
@@ -154,6 +154,6 @@ export const vdUpload = (url: string, file: File, obj?: Object): Promise<UseResu
 		headers: {'Content-Type': 'multipart/form-data'},
 	};
 	return axios.post(url, param, config)
-		.then(res => res.data as UseResult<string>);
+		.then(res => res.data as UseResult<T>);
 };
 
