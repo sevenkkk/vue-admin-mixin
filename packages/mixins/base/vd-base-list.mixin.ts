@@ -14,9 +14,6 @@ export abstract class VdBaseListMixin<P, R> extends VdMixin {
 	// 请求参数
 	protected vdParams: P = {} as any;
 
-	// 当前索引
-	public vdIndex = 0;
-
 	// 请求地址
 	protected vdListPath!: string;
 
@@ -26,11 +23,6 @@ export abstract class VdBaseListMixin<P, R> extends VdMixin {
 	// loading 状态
 	public get vdLLoading() {
 		return this.vdLoading;
-	}
-
-	// 当前选中的对象
-	protected get vdActive(): R | undefined {
-		return this.vdList.length > this.vdIndex ? this.vdList[this.vdIndex] : undefined;
 	}
 
 	// 无数据
