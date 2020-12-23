@@ -46,9 +46,13 @@ export namespace VdModal {
 		// 打开模态框的回调
 		private _resolve: (result?: VdModalResult) => void;
 
-		// 管道，用于匹配打开的模态框
-		protected vdSetPipe(): string {
+		public vdSetPipe(): string {
 			return VD_MODAL_DEFAULT_PIPE_KEY;
+		}
+
+		// 管道，用于匹配打开的模态框
+		public get vdActivePipe() {
+			return this.pipe || this.vdSetPipe();
 		}
 
 		// 是否是更新
@@ -78,7 +82,7 @@ export namespace VdModal {
 		 */
 		protected created() {
 			setTimeout(() => {
-				EventBus.$on(`${VD_MODAL_OPEN_MODAL}-${this.pipe ? this.pipe : this.vdSetPipe()}`,
+				EventBus.$on(`${VD_MODAL_OPEN_MODAL}-${this.vdActivePipe}`,
 					({data, mode, resolve, isShow}) => {
 						if (isShow) {
 							this.vdInputData = data;
@@ -94,7 +98,7 @@ export namespace VdModal {
 		}
 
 		protected beforeDestroy() {
-			this.$off(`${VD_MODAL_OPEN_MODAL}-${this.pipe ? this.pipe : this.vdSetPipe()}`);
+			this.$off(`${VD_MODAL_OPEN_MODAL}-${this.vdActivePipe}`);
 		}
 
 		/**
@@ -139,7 +143,7 @@ export namespace VdModal {
 			const result = {
 				mode: this.vdPageMode,
 				data,
-				pipe: this.pipe ? this.pipe : this.vdSetPipe(),
+				pipe: this.vdActivePipe,
 			};
 			EventBus.$emit(VD_MODAL_CLOSE_MODAL, result);
 			this._resolve(result);
@@ -193,6 +197,7 @@ export namespace VdModal {
 		 * @param pipe 管道
 		 */
 		public vdModalCallback(data?: any, pipe?: string) {
+			console.log(data);
 		}
 	}
 

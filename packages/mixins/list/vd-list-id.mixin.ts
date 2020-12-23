@@ -20,7 +20,7 @@ abstract class VdBaseListIdMixin<P, R> extends VdListMixin<P, R> {
 	 * @param list
 	 */
 	public resetVdId(list: R[]) {
-		if ((!(list || []).some(item => String(item[this.vdIdAttrName()]) === this.vdId))) {
+		if ((!(list || []).some(item => String(item[this.vdIdAttrName()]) == this.vdId))) {
 			this.setIdByFirst(list);
 		}
 	}
@@ -36,12 +36,9 @@ abstract class VdBaseListIdMixin<P, R> extends VdListMixin<P, R> {
 
 	// 当前选中的对象
 	public get vdActive(): R | undefined {
-		return this.vdGetActive(this.vdList || [], this.vdId);
+		return this.vdList.find(item => String(item[this.vdIdAttrName()]) == this.vdId);
 	}
 
-	public vdGetActive(list: R[], vdId?: string) {
-		return list.find(item => String(item[this.vdIdAttrName()]) === vdId);
-	}
 }
 
 @Component
