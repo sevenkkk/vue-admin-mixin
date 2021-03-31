@@ -69,7 +69,17 @@ export namespace VdTable {
 			EventBus.$on(`${VD_PAGE_SYNC_PARAMS_KEY_2}-${this.vdKey}`, (params: P) => this.vdParams = params);
 			EventBus.$on(`${VD_PAGE_SYNC_LIST_KEY_2}-${this.vdKey}`, (list: Array<R>) => this.vdList = list);
 			EventBus.$on(`${VD_PAGE_SYNC_SELECTED_KEY_2}-${this.vdKey}`, (list: Array<R>) => this.vdSelected = list);
-			EventBus.$on(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, ({type, effectCount}) => {
+			EventBus.$on(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, ({type, effectCount, clear, params}) => {
+				// 清空参数刷新
+				if (clear) {
+					if (params) {
+						this.vdParams = {...params};
+						this.vdOldParams =  {...params};
+					} else {
+						this.vdParams = {} as any;
+						this.vdOldParams = {} as any;
+					}
+				}
 				if (type == 0) {
 					this.vdInitData().then();
 				} else {
@@ -212,6 +222,13 @@ export namespace VdTable {
 			} else {
 				this.vdParams = {} as any;
 			}
+		}
+
+		/**
+		 * 清空对象并刷新列表
+		 */
+		public vdClearAndSearch(params?: T) {
+			EventBus.$emit(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, {type: 0, clear: true, params: params});
 		}
 	}
 

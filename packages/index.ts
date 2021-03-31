@@ -25,3 +25,4 @@ export * from "./model/request-options";
 export * from "./utils/http.utils";
 export * from "./utils/message.utils";
 export * from "./utils/validate.utils";
+export * from "./utils/event-bus.utils";
