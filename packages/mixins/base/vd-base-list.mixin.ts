@@ -1,6 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { VdMixin } from './vd.mixin';
 import { UseResult } from '../../model/use-result';
+import { VdLoadingType, VdRequestOptions } from '../..';
 
 // @ts-ignore
 @Component
@@ -38,8 +39,12 @@ export abstract class VdBaseListMixin<P, R> extends VdMixin {
 	/**
 	 * 请求列表数据
 	 */
-	protected async request(path: string, data: any): Promise<UseResult<R[]>> {
-		return await this.vdRequest<R[]>(path, data, {load: true});
+	protected async request(path: string, data: any, options: VdRequestOptions = {
+		load: true,
+		loading: true,
+		loadingType: VdLoadingType.STATUS_ONLY,
+	}): Promise<UseResult<R[]>> {
+		return await this.vdRequest<R[]>(path, data, options);
 	}
 
 	/**

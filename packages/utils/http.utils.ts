@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 // @ts-ignore
 import qs from 'qs';
 import { vdMessage } from './message.utils';
@@ -11,10 +11,17 @@ import { VdRequestOptions } from '../model/request-options';
  * 请求以form表单形式进行提交
  * @param url 请求地址
  * @param data 请求参数，json类型进行转成表单提交格式
+ * @param config 配置
  */
-const formPost = (url: string, data?: any): Promise<any> => {
-
-	if (data && !(VdCommonService.isObject(data) || VdCommonService.isArray(data))) {
+const formPost = (
+	url: string,
+	data?: any,
+	config?: AxiosRequestConfig,
+): Promise<any> => {
+	if (
+		data &&
+		!(VdCommonService.isObject(data) || VdCommonService.isArray(data))
+	) {
 		throw new Error('参数值必须为数组和对象!');
 	}
 
@@ -68,18 +75,24 @@ const formPost = (url: string, data?: any): Promise<any> => {
 		method: 'post',
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		data: _data,
-	}).then(res => res.data);
+		...(config || {}),
+	});
 };
 
 /**
  * 发送请求，处理返回值
  * @param doRequest 请求体
  */
-const doFetch = async <T>(doRequest: () => Promise<any>): Promise<UseResult<T>> => {
+const doFetch = async <T>(
+	doRequest: () => Promise<any>,
+): Promise<UseResult<T>> => {
 	try {
 		const resData = await doRequest();
 		if (VdConfigService.config?.handleHttpResult) {
-			return {success: true, ...(VdConfigService.config?.handleHttpResult<T>(resData))};
+			return {
+				success: true,
+				...VdConfigService.config?.handleHttpResult<T>(resData),
+			};
 		}
 		return {success: true, payload: undefined};
 	} catch (err) {
@@ -91,17 +104,25 @@ const doFetch = async <T>(doRequest: () => Promise<any>): Promise<UseResult<T>> 
 				errorMessage = response.data.errorMessage || '';
 			}
 			if (response.status === 403) {
-				errorMessage = VdConfigService.config?.message403 || response.data.errorMessage;
+				errorMessage =
+					VdConfigService.config?.message403 || response.data.errorMessage;
 			}
 			if (response.status === 401) {
-				errorMessage = VdConfigService.config?.message401 || response.data.errorMessage;
+				errorMessage =
+					VdConfigService.config?.message401 || response.data.errorMessage;
 			}
 			errorCode = response.data.errorCode;
-			errorMessage = response.data.errorMessage || VdConfigService.config?.systemErrorMessage;
+			errorMessage =
+				response.data.errorMessage ||
+				VdConfigService.config?.systemErrorMessage;
 		}
 		/* eslint-disable */
 		// @ts-ignore
-		return {success: false, errorCode: errorCode || '500', errorMessage: errorMessage};
+		return {
+			success: false,
+			errorCode: errorCode || '500',
+			errorMessage: errorMessage,
+		};
 	}
 };
 
@@ -109,12 +130,17 @@ const doFetch = async <T>(doRequest: () => Promise<any>): Promise<UseResult<T>> 
  * 发送api请求
  * @param url  请求地址
  * @param data 请求数据
+ * @param config 配置
  */
-export const vdFetch = <T>(url: string, data?: any): Promise<UseResult<T>> => {
+export const vdFetch = <T>(
+	url: string,
+	data?: any,
+	config?: AxiosRequestConfig,
+): Promise<UseResult<T>> => {
 	if (!url) {
 		throw new Error('The request URL is not defined.');
 	}
-	return doFetch(() => formPost(url, data));
+	return doFetch(() => formPost(url, data, config).then(res => res.data));
 };
 
 /**
@@ -123,7 +149,11 @@ export const vdFetch = <T>(url: string, data?: any): Promise<UseResult<T>> => {
  * @param data 参数
  * @param options 配置
  */
-export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions): Promise<UseResult<T>> => {
+export const vdRequest = <T>(
+	url: string,
+	data?: any,
+	options?: VdRequestOptions,
+): Promise<UseResult<T>> => {
 	if (options) {
 		const {message, load} = options;
 		let _message = message;
@@ -133,7 +163,10 @@ export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions
 		return vdMessage<T>(() => vdFetch(url, data), _message);
 	}
 
-	return vdMessage<T>(() => vdFetch(url, data), !data ? {showSuccess: false} : undefined);
+	return vdMessage<T>(
+		() => vdFetch(url, data),
+		!data ? {showSuccess: false} : undefined,
+	);
 };
 
 /**
@@ -142,7 +175,11 @@ export const vdRequest = <T>(url: string, data?: any, options?: VdRequestOptions
  * @param file 文件
  * @param obj 附加参数
  */
-export const vdUpload = <T>(url: string, file: File, obj?: Object): Promise<UseResult<T>> => {
+export const vdUpload = <T>(
+	url: string,
+	file: File,
+	obj?: Object,
+): Promise<UseResult<T>> => {
 	let param = new FormData();
 	param.append('file', file);
 
@@ -153,7 +190,48 @@ export const vdUpload = <T>(url: string, file: File, obj?: Object): Promise<UseR
 	let config = {
 		headers: {'Content-Type': 'multipart/form-data'},
 	};
-	return axios.post(url, param, config)
-		.then(res => res.data as UseResult<T>);
+	return axios.post(url, param, config).then(res => res.data as UseResult<T>);
 };
 
+/**
+ * 加载xlsx
+ * @param url 地址
+ * @param param 参数
+ * @param name 文件名称
+ */
+export const vdDownload = (
+	url: string,
+	param: any,
+	name: string,
+): Promise<any> => {
+	const fileName = name + '.xlsx'; // 文件名称
+	return formPost(url, param, {responseType: 'blob'}).then(res => {
+		const blob = new Blob([res.data]);
+		if (typeof window.navigator.msSaveBlob !== 'undefined') {
+			/*
+			 * For IE
+			 * >=IE10
+			 */
+			window.navigator.msSaveBlob(blob, fileName);
+		} else {
+			/*
+			 * For Non-IE (chrome, firefox)
+			 */
+			let URL = window.URL || window.webkitURL;
+			let objectUrl = URL.createObjectURL(blob);
+			if (fileName) {
+				let a = document.createElement('a');
+				if (typeof a.download === 'undefined') {
+					window.location.href = objectUrl;
+				} else {
+					a.href = objectUrl;
+					a.download = fileName;
+					a.click();
+					window.URL.revokeObjectURL(objectUrl);
+				}
+			} else {
+				window.location.href = objectUrl;
+			}
+		}
+	});
+};

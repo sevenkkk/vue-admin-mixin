@@ -2,6 +2,7 @@ import { Component } from 'vue-property-decorator';
 import { VdRespObjMixin } from './base/vd-resp-obj-mixin';
 import { UseResult } from '../model/use-result';
 import { vdValidate } from '../utils/validate.utils';
+import { VdLoadingType } from '..';
 
 // @ts-ignore
 @Component
@@ -43,7 +44,7 @@ abstract class BaseSubmitMixin<T, R> extends VdRespObjMixin<T> {
 	 * @param data 请求数据
 	 */
 	private vdSubmitRequest(path: string, data: T): Promise<UseResult<R>> {
-		return this.vdRequest<R>(path, data, {loading: true});
+		return this.vdRequest<R>(path, data, {loading: true, loadingType: VdLoadingType.ALERT});
 	}
 
 	/**

@@ -27,17 +27,17 @@ export class VdMixin extends VdHttpMixin {
 	 */
 	protected vdRequest<T>(url: string, data?: any, options?: VdRequestOptions): Promise<UseResult<T>> {
 		if (options) {
-			const {message, confirm, load, loading} = options;
+			const {message, confirm, load, loading, loadingType} = options;
 			let _message = message;
 			if (load) {
 				_message = {...message, showSuccess: false};
 			}
 			if (confirm && VdConfigService.config?.handleConfirm) {
 				return VdConfigService.config?.handleConfirm(confirm).then(() => {
-					return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
+					return vdMessage<T>(() => this.vdFetch(url, data, {loading, loadingType}), _message);
 				});
 			}
-			return vdMessage<T>(() => this.vdFetch(url, data, {loading}), _message);
+			return vdMessage<T>(() => this.vdFetch(url, data, {loading, loadingType}), _message);
 		}
 		return vdMessage<T>(() => this.vdFetch(url, data));
 	}

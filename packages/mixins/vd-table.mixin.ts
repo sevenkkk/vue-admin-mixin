@@ -4,6 +4,7 @@ import { UseResult } from '../model/use-result';
 import { VdMixin } from './base/vd.mixin';
 import { EventBus } from '../utils/event-bus.utils';
 import { findComponentByAttrName } from '../utils/vue-component.utils';
+import { VdLoadingType, VdRequestOptions } from '..';
 
 const VD_PAGE_SYNC_PARAMS_KEY_1 = 'vd-page-sync-params-key-1';
 const VD_PAGE_SYNC_PARAMS_KEY_2 = 'vd-page-sync-params-key-2';
@@ -19,7 +20,6 @@ export namespace VdTable {
 	 */
 	@Component
 	export class MainMixin<P, R> extends VdBaseListMixin<P, R> {
-
 		private get vdKey() {
 			// @ts-ignore
 			return this?._uid;
@@ -38,7 +38,6 @@ export namespace VdTable {
 
 		// 多选内容
 		public vdSelected = [];
-
 
 		public vdOldParams = {};
 
@@ -66,26 +65,36 @@ export namespace VdTable {
 		 * 初始化
 		 */
 		protected created() {
-			EventBus.$on(`${VD_PAGE_SYNC_PARAMS_KEY_2}-${this.vdKey}`, (params: P) => this.vdParams = params);
-			EventBus.$on(`${VD_PAGE_SYNC_LIST_KEY_2}-${this.vdKey}`, (list: Array<R>) => this.vdList = list);
-			EventBus.$on(`${VD_PAGE_SYNC_SELECTED_KEY_2}-${this.vdKey}`, (list: Array<R>) => this.vdSelected = list);
-			EventBus.$on(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, ({type, effectCount, clear, params}) => {
-				// 清空参数刷新
-				if (clear) {
-					if (params) {
-						this.vdParams = {...params};
-						this.vdOldParams =  {...params};
-					} else {
-						this.vdParams = {} as any;
-						this.vdOldParams = {} as any;
+			EventBus.$on(
+				`${VD_PAGE_SYNC_PARAMS_KEY_2}-${this.vdKey}`,
+				(params: P) => (this.vdParams = params),
+			);
+			EventBus.$on(
+				`${VD_PAGE_SYNC_LIST_KEY_2}-${this.vdKey}`,
+				(list: Array<R>) => (this.vdList = list),
+			);
+			EventBus.$on(
+				`${VD_PAGE_SYNC_SELECTED_KEY_2}-${this.vdKey}`,
+				(list: Array<R>) => (this.vdSelected = list),
+			);
+			EventBus.$on(
+				`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`,
+				({type, effectCount, clear, params}) => {
+					// 清空参数刷新
+					if (clear) {
+						if (params) {
+							this.vdParams = {...params};
+						} else {
+							this.vdParams = this.vdDefaultParams();
+						}
 					}
-				}
-				if (type == 0) {
-					this.vdInitData().then();
-				} else {
-					this.vdRefreshByCount(effectCount).then();
-				}
-			});
+					if (type == 0) {
+						this.vdInitData().then();
+					} else {
+						this.vdRefreshByCount(effectCount).then();
+					}
+				},
+			);
 			// 设置初始值
 			this.vdParams = this.vdDefaultParams();
 		}
@@ -106,7 +115,6 @@ export namespace VdTable {
 			this.vdSetListPath(path);
 			if (this.vdUsePage()) {
 				this.vdPage = 1;
-				this.vdOldParams = this.vdOldParams ? JSON.parse(JSON.stringify(this.vdParams)) : {};
 			}
 			return this.vdRefresh(data);
 		}
@@ -115,7 +123,9 @@ export namespace VdTable {
 		 * 刷新当前数据
 		 * @param effectCount 影响个数
 		 */
-		public async vdRefreshByCount(effectCount?: number): Promise<UseResult<R[]>> {
+		public async vdRefreshByCount(
+			effectCount?: number,
+		): Promise<UseResult<R[]>> {
 			return this.vdRefresh(undefined, effectCount);
 		}
 
@@ -124,7 +134,10 @@ export namespace VdTable {
 		 * @param data 参数
 		 * @param effectCount 影响个数
 		 */
-		public async vdRefresh(data?: P, effectCount?: number): Promise<UseResult<R[]>> {
+		public async vdRefresh(
+			data?: P,
+			effectCount?: number,
+		): Promise<UseResult<R[]>> {
 			const getPage = () => {
 				if (this.vdUsePage()) {
 					if (effectCount && this.vdList.length + effectCount === 0) {
@@ -135,14 +148,21 @@ export namespace VdTable {
 				return undefined;
 			};
 
-			let _data = {
-				...this.vdOldParams,
+			// 设置更新参数
+			if (data) {
+				this.vdParams = {...this.vdParams, ...data};
+			}
+
+			// 重构当前参数添加页码信息
+			const _data = {
+				...this.vdParams,
 				page: getPage(),
 				pageSize: this.vdUsePage() ? this.vdPageSize : undefined,
 			};
-			if (data) {
-				_data = {..._data, ...data};
-			}
+
+			// 保留当前参数
+			this.vdOldParams = JSON.parse(JSON.stringify(_data));
+
 			const res = await this.request(this.vdListPath, _data);
 			if (this.vdIsDefaultSet) {
 				this.vdList = res.payload || [];
@@ -154,6 +174,26 @@ export namespace VdTable {
 			return res;
 		}
 
+		/**
+		 * 刷新上次查询条件数据
+		 * @param options 配置
+		 */
+		public async vdRefreshByLast(
+			options: VdRequestOptions = {
+				load: true,
+				loading: false,
+				message: {showMessage: false},
+			},
+		): Promise<UseResult<R[]>> {
+			const res = await this.request(this.vdListPath, this.vdOldParams, options);
+			if (this.vdIsDefaultSet) {
+				this.vdList = res.payload || [];
+				if (this.vdUsePage()) {
+					this.vdTotal = res.totalCount || 0;
+				}
+			}
+			return res;
+		}
 
 		/**
 		 * 根据分页变化重新加载数据
@@ -178,7 +218,6 @@ export namespace VdTable {
 	 */
 	@Component
 	export class ParamMixin<T> extends VdMixin {
-
 		private get vdKey() {
 			return findComponentByAttrName(this, 'vdTableMainMixin')?._uid;
 		}
@@ -192,7 +231,10 @@ export namespace VdTable {
 		}
 
 		public created() {
-			EventBus.$on(`${VD_PAGE_SYNC_PARAMS_KEY_1}-${this.vdKey}`, (params: T) => this.vdParams = params);
+			EventBus.$on(
+				`${VD_PAGE_SYNC_PARAMS_KEY_1}-${this.vdKey}`,
+				(params: T) => (this.vdParams = params),
+			);
 		}
 
 		protected beforeDestroy() {
@@ -210,7 +252,10 @@ export namespace VdTable {
 		 * 刷新数据列表
 		 */
 		public vdRefresh(effectCount?: number) {
-			EventBus.$emit(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, {type: 1, effectCount});
+			EventBus.$emit(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, {
+				type: 1,
+				effectCount,
+			});
 		}
 
 		/**
@@ -228,13 +273,16 @@ export namespace VdTable {
 		 * 清空对象并刷新列表
 		 */
 		public vdClearAndSearch(params?: T) {
-			EventBus.$emit(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, {type: 0, clear: true, params: params});
+			EventBus.$emit(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, {
+				type: 0,
+				clear: true,
+				params: params,
+			});
 		}
 	}
 
 	@Component
 	export class ListMixin<T> extends VdMixin {
-
 		private get vdKey() {
 			return findComponentByAttrName(this, 'vdTableMainMixin')?._uid;
 		}
@@ -255,8 +303,14 @@ export namespace VdTable {
 		}
 
 		protected created() {
-			EventBus.$on(`${VD_PAGE_SYNC_LIST_KEY_1}-${this.vdKey}`, (list: Array<T>) => this.vdList = list);
-			EventBus.$on(`${VD_PAGE_SYNC_SELECTED_KEY_1}-${this.vdKey}`, (list: Array<T>) => this.vdSelected = list);
+			EventBus.$on(
+				`${VD_PAGE_SYNC_LIST_KEY_1}-${this.vdKey}`,
+				(list: Array<T>) => (this.vdList = list),
+			);
+			EventBus.$on(
+				`${VD_PAGE_SYNC_SELECTED_KEY_1}-${this.vdKey}`,
+				(list: Array<T>) => (this.vdSelected = list),
+			);
 		}
 
 		protected beforeDestroy() {
@@ -283,7 +337,10 @@ export namespace VdTable {
 		 * 刷新数据列表
 		 */
 		public vdRefresh(effectCount?: number) {
-			EventBus.$emit(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, {type: 1, effectCount});
+			EventBus.$emit(`${VD_PAGE_LIST_SEARCH_KEY}-${this.vdKey}`, {
+				type: 1,
+				effectCount,
+			});
 		}
 	}
 }
