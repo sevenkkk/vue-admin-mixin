@@ -96,6 +96,7 @@ const doFetch = async <T>(
 		}
 		return {success: true, payload: undefined};
 	} catch (err) {
+		console.log(err);
 		let errorMessage;
 		let errorCode;
 		const response = err.response;
