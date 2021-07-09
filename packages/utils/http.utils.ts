@@ -1,7 +1,8 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 // @ts-ignore
 import qs from 'qs';
 import { vdMessage } from './message.utils';
+import { instance } from './axios.utils';
 import { VdConfigService } from '../service/vd-config.service';
 import { VdCommonService } from '../service/vd-common.service';
 import { UseResult } from '../model/use-result';
@@ -70,7 +71,7 @@ const formPost = (
 		console.log(e);
 	}
 
-	return axios({
+	return instance({
 		baseURL: url,
 		method: 'post',
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -191,7 +192,7 @@ export const vdUpload = <T>(
 	let config = {
 		headers: {'Content-Type': 'multipart/form-data'},
 	};
-	return axios.post(url, param, config).then(res => res.data as UseResult<T>);
+	return instance.post(url, param, config).then(res => res.data as UseResult<T>);
 };
 
 /**

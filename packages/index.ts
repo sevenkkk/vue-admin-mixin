@@ -22,6 +22,7 @@ export * from "./model/use-result";
 export * from "./model/config-options";
 export * from "./model/request-options";
 
+export * from "./utils/axios.utils";
 export * from "./utils/http.utils";
 export * from "./utils/message.utils";
 export * from "./utils/validate.utils";
